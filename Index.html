@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 网页标题 -->
+    <title>GPA计算器 | GPA Calculator</title>
+    <!-- 引入外部资源（如图标、Excel 导出库） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- 内嵌 CSS 样式（计算器的外观） -->
+    <style>
+        /* 这里是你之前的所有 CSS 代码，确保界面正常显示 */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f5f7f9; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        /* （省略其他 CSS 代码，保持和你之前的双语版一致） */
+    </style>
+</head>
+<body>
+    <!-- 页面内容（计算器的可视化界面） -->
+    <div class="container">
+        <!-- 头部（标题 + 语言切换） -->
+        <header>
+            <h1>
+                <span class="lang-zh">GPA计算器</span>
+                <span class="lang-en lang-hidden">GPA Calculator</span>
+            </h1>
+            <div class="language-switch">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+        </header>
+        
+        <!-- 描述文字 -->
+        <div class="description">
+            <span class="lang-zh">本计算器支持三种GPA计算体系（4.3制、5.0制和4.0制）...</span>
+            <span class="lang-en lang-hidden">This calculator supports three GPA systems...</span>
+        </div>
+        
+        <!-- 课程表格（核心交互区域） -->
+        <div class="spreadsheet-container">
+            <table id="courses-table">
+                <thead>
+                    <tr>
+                        <th class="fixed-column">
+                            <span class="lang-zh">序号</span>
+                            <span class="lang-en lang-hidden">No.</span>
+                        </th>
+                        <th class="subject-cell">
+                            <span class="lang-zh">科目名称</span>
+                            <span class="lang-en lang-hidden">Course Name</span>
+                        </th>
+                        <!-- （省略其他表格列，保持和你之前的代码一致） -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 表格内容由 JS 动态生成 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- GPA 结果显示 -->
+        <div class="gpa-summary">
+            <div class="gpa-box">
+                <div>
+                    <span class="lang-zh">平均GPA (4.3制)</span>
+                    <span class="lang-en lang-hidden">Average GPA (4.3 Scale)</span>
+                </div>
+                <div class="gpa-value" id="gpa-4-3">0.00</div>
+            </div>
+            <!-- （省略其他 GPA 结果框） -->
+        </div>
+    </div>
+    
+    <!-- 交互逻辑（JS 代码，实现成绩计算、语言切换、Excel 导出） -->
+    <script>
+        // 这里是你之前的所有 JavaScript 代码，包括：
+        // 1. 课程数据（含中英文名称）
+        // 2. 表格动态生成逻辑
+        // 3. GPA 计算核心算法
+        // 4. 语言切换功能
+        // 5. Excel 导出功能
+        // （保持和你之前的双语版代码完全一致即可）
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 语言切换逻辑
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    // （省略具体切换代码，保持原逻辑）
+                });
+            });
+            
+            // 课程数据
+            const courses = [
+                { id: "001", name: { zh: "学术英语 I", en: "Academic English I" }, honors: 0, credits: 4 },
+                // （省略其他课程数据，保持原结构）
+            ];
+            
+            // GPA 计算逻辑
+            function calculateAll() {
+                // （省略计算代码，保持原逻辑）
+            }
+            
+            // Excel 导出逻辑
+            document.getElementById('export-excel').addEventListener('click', function() {
+                // （省略导出代码，保持原逻辑）
+            });
+            
+            // 初始计算
+            calculateAll();
+        });
+    </script>
+</body>
+</html>
