@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP统计学概念随机抽取器（5-9单元）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // 配置Tailwind自定义样式
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', // 主色调：紫色（科技感+活泼）
+                        unit5: '#06B6D4',   // 单元5：青色
+                        unit6: '#3B82F6',   // 单元6：蓝色
+                        unit7: '#8B5CF6',   // 单元7：深紫
+                        unit8: '#EC4899',   // 单元8：粉色
+                        unit9: '#10B981',   // 单元9：亮绿
+                    },
+                    fontFamily: {
+                        comic: ['"Comic Sans MS"', 'cursive', 'sans-serif'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 2s infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'pop': 'pop 0.5s ease-out',
+                    },
+                    keyframes: {
+                        pop: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '50%': { transform: 'scale(1.1)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+            }
+            .btn-custom {
+                @apply rounded-full px-6 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5;
+            }
+            .timer-btn {
+                @apply px-4 py-2 rounded-lg transition-all text-center font-medium;
+            }
+            .timer-btn-active {
+                @apply bg-primary text-white;
+            }
+            .timer-btn-inactive {
+                @apply bg-primary/20 hover:bg-primary/40 text-primary;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen font-comic">
+    <!-- 页面头部 -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fa fa-bar-chart text-primary text-4xl mr-3 animate-spin-slow"></i>
+                <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-primary text-shadow">
+                    AP统计学概念抽取器
+                </h1>
+            </div>
+            <div class="text-sm text-gray-500">
+                <p>共5个单元 · 98个核心概念</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 筛选与抽取区 -->
+        <section class="mb-12 bg-white rounded-2xl shadow-lg p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- 单元筛选 -->
+                <div class="w-full md:w-1/3 bg-gray-50 rounded-xl p-5">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fa fa-list-ul text-primary mr-2"></i>选择单元
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <!-- 单元5 -->
+                        <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit5 cursor-pointer transition-all">
+                            <input type="checkbox" value="5" class="form-checkbox h-5 w-5 text-unit5 mr-2" checked>
+                            <span class="font-medium text-unit5">单元5：抽样分布</span>
+                        </label>
+                        <!-- 单元6 -->
+                        <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit6 cursor-pointer transition-all">
+                            <input type="checkbox" value="6" class="form-checkbox h-5 w-5 text-unit6 mr-2" checked>
+                            <span class="font-medium text-unit6">单元6：比例推断</span>
+                        </label>
+                        <!-- 单元7 -->
+                        <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit7 cursor-pointer transition-all">
+                            <input type="checkbox" value="7" class="form-checkbox h-5 w-5 text-unit7 mr-2" checked>
+                            <span class="font-medium text-unit7">单元7：均值推断</span>
+                        </label>
+                        <!-- 单元8 -->
+                        <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit8 cursor-pointer transition-all">
+                            <input type="checkbox" value="8" class="form-checkbox h-5 w-5 text-unit8 mr-2" checked>
+                            <span class="font-medium text-unit8">单元8：卡方检验</span>
+                        </label>
+                        <!-- 单元9 -->
+                        <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit9 cursor-pointer transition-all">
+                            <input type="checkbox" value="9" class="form-checkbox h-5 w-5 text-unit9 mr-2" checked>
+                            <span class="font-medium text-unit9">单元9：斜率推断</span>
+                        </label>
+                    </div>
+                    
+                    <!-- 倒计时设置 -->
+                    <div class="mt-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fa fa-clock-o text-primary mr-2"></i>倒计时设置
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-2">显示解释前的思考时间：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="timer-option timer-btn timer-btn-inactive" data-seconds="30">30秒</button>
+                            <button class="timer-option timer-btn timer-btn-active" data-seconds="60">1分钟</button>
+                            <button class="timer-option timer-btn timer-btn-inactive" data-seconds="120">2分钟</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-3">
+                        <button id="selectAll" class="btn-custom bg-primary/80 hover:bg-primary">
+                            <i class="fa fa-check-square-o mr-1"></i>全选
+                        </button>
+                        <button id="deselectAll" class="btn-custom bg-gray-500 hover:bg-gray-600">
+                            <i class="fa fa-square-o mr-1"></i>全不选
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 抽取按钮与结果显示 -->
+                <div class="w-full md:w-2/3 flex flex-col items-center justify-center">
+                    <button id="randomBtn" class="btn-custom bg-primary text-[clamp(1rem,2vw,1.25rem)] px-10 py-4 mb-8 animate-bounce-slow">
+                        <i class="fa fa-random mr-2"></i>随机抽取概念
+                    </button>
+
+                    <!-- 概念结果卡片 -->
+                    <div id="conceptCard" class="w-full bg-white rounded-xl shadow-lg border-4 border-primary/30 p-6 card-hover hidden animate-pop">
+                        <div id="conceptUnit" class="text-sm font-bold px-3 py-1 rounded-full inline-block mb-3 bg-primary/10 text-primary">
+                            单元5：抽样分布
+                        </div>
+                        <h3 id="conceptName" class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-4 text-center">
+                            Central Limit Theorem (CLT)
+                        </h3>
+                        
+                        <!-- 倒计时区域 -->
+                        <div id="timerContainer" class="bg-yellow-50 rounded-lg p-4 mb-4 hidden">
+                            <h4 class="font-bold text-yellow-700 mb-2 flex items-center">
+                                <i class="fa fa-hourglass-half mr-2"></i>概念解释将在：
+                            </h4>
+                            <div class="flex items-center">
+                                <span id="countdown" class="text-2xl font-bold text-yellow-600">01:00</span>
+                                <div class="w-full ml-4 bg-gray-200 rounded-full h-2.5">
+                                    <div id="timerBar" class="bg-yellow-500 h-2.5 rounded-full transition-all duration-1000" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <button id="showNowBtn" class="mt-2 text-sm text-blue-600 hover:underline">
+                                <i class="fa fa-eye mr-1"></i>立即查看
+                            </button>
+                        </div>
+                        
+                        <!-- 解释区域 -->
+                        <div id="explanationContainer" class="bg-gray-50 rounded-lg p-4 mb-4 hidden">
+                            <h4 class="font-bold text-gray-700 mb-2 flex items-center">
+                                <i class="fa fa-book text-primary mr-2"></i>概念解释：
+                            </h4>
+                            <p id="conceptDesc" class="text-gray-600">
+                                当样本量n≥30时，样本均值的抽样分布近似正态分布，无论总体分布如何；可按正态分布处理
+                            </p>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span id="conceptCount" class="text-gray-500">
+                                已抽取：0/98
+                            </span>
+                            <button id="nextBtn" class="btn-custom bg-primary/90 hover:bg-primary">
+                                <i class="fa fa-refresh mr-1"></i>再抽一个
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 初始提示 -->
+                    <div id="initialHint" class="text-center text-gray-500 py-10">
+                        <i class="fa fa-lightbulb-o text-5xl text-primary/50 mb-4"></i>
+                        <p class="text-xl">选择要抽取的单元，点击上方按钮开始随机抽取</p>
+                        <p class="mt-2">每个概念包含单元分类、英文名称和详细解释</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 已抽取概念记录 -->
+        <section class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fa fa-history text-primary mr-2"></i>已抽取概念记录
+            </h2>
+            <div id="historyList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-64 overflow-y-auto p-2">
+                <div class="text-gray-500 text-center col-span-full py-8">
+                    暂无抽取记录，开始抽取后将显示在这里
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">AP统计学概念随机抽取器 | 5-9单元专用版</p>
+            <p class="text-sm text-gray-400">设计目标：帮助学生快速记忆统计学核心概念</p>
+        </div>
+    </footer>
+
+    <script>
+        // 统计学概念数据（仅包含5-9单元）
+        const statsConcepts = {
+            5: [
+                { name: "Continuous Random Variable（连续随机变量）", desc: "取值连续的随机变量，例如人的体重、身高；与离散随机变量（如二项分布、几何分布）对应" },
+                { name: "normal distribution & Bell-shape curve（正态分布与钟形曲线）", desc: "呈钟形的连续概率分布，具有对称性，均值、中位数、众数相等；分为标准正态分布（均值0，标准差1）和非标准正态分布" },
+                { name: "Significant of area of a region under the graph of normal distribution（正态分布曲线下面积的意义）", desc: "正态分布曲线下某区间的面积代表该区间内随机变量的概率" },
+                { name: "Use Z-score to calculate probability of a normal distribution（用Z分数计算正态分布概率）", desc: "Z分数计算公式：Z=(x-μ)/σ；计算Z分数后，通过Z表查找对应左侧概率" },
+                { name: "Use Calculator to find probability of normal Distribution - left tail（用计算器求正态分布左侧概率）", desc: "使用计算器的NCD（Normal Cumulative Distribution）函数，设置下限为-∞，上限为目标值，计算左侧面积（概率）" },
+                { name: "Use Calculator to find probability of normal Distribution - right tail（用计算器求正态分布右侧概率）", desc: "使用计算器的NCD函数，设置下限为目标值，上限为+∞，计算右侧面积（概率）" },
+                { name: "Use Calculator to find probability of normal Distribution - within（用计算器求正态分布区间内概率）", desc: "使用计算器的NCD函数，设置下限和上限为区间端点，计算区间内面积（概率）" },
+                { name: "Sampling distribution of a statistic means（统计量的抽样分布）", desc: "以样本均值为例：从总体中多次抽取大小为n的样本，计算每个样本的均值，这些均值构成的分布即为样本均值的抽样分布；其均值=总体均值（μ_x̄=μ），标准差=总体标准差/√n（σ_x̄=σ/√n）" },
+                { name: "Central Limit Theorem (CLT)（中心极限定理）", desc: "当样本量n≥30时，样本均值的抽样分布近似正态分布，无论总体分布如何；可按正态分布处理" },
+                { name: "How large is n when CLT is valid（CLT适用的样本量）", desc: "样本量n≥30时，中心极限定理（CLT）适用，样本均值的抽样分布近似正态" },
+                { name: "Randomization distribution（随机化分布）", desc: "若假设（H0）两个样本来自同一总体，将两样本数据打乱后随机重新分组，形成的新样本参数（如均值、比例）构成的分布" },
+                { name: "Biased estimate and Unbiased estimate（有偏估计与无偏估计）", desc: "无偏估计：点估计的均值等于总体真实值；有偏估计：点估计的均值与总体真实值不相等" },
+                { name: "Point estimate of a parameter（参数的点估计）", desc: "用单个数值（点）估计总体参数，例如：用样本均值估计总体均值，用样本比例估计总体比例" },
+                { name: "Sampling distribution of sample proportion p（样本比例的抽样分布）", desc: "从总体中多次抽取大小为n的样本，计算每个样本的比例p̂，这些p̂构成的分布；其均值=总体比例（μ_p̂=p），标准差=√[p(1-p)/n]（σ_p̂=√[p(1-p)/n]）" },
+                { name: "10% condition for sampling distribution of sample proportion（样本比例抽样分布的10%条件）", desc: "计算样本比例抽样分布标准差的公式仅当样本量n≤总体量N的10%时适用（保证独立性）" },
+                { name: "Large sample condition for sampling distribution of sample proportion（样本比例抽样分布的大样本条件）", desc: "当np≥10且n(1-p)≥10时，样本比例的抽样分布近似正态分布" },
+                { name: "Interpret the mean and sd of sampling distribution of sample proportion（样本比例抽样分布的均值与标准差解释）", desc: "1. 均值解释：多次抽取样本，样本比例的平均值为总体比例p；2. 标准差解释：长期来看，样本比例与总体比例的平均距离为标准差" },
+                { name: "Sampling distribution of the differences between 2 sample proportions（两样本比例差的抽样分布）", desc: "从总体1抽n1样本得p̂1，从总体2抽n2样本得p̂2，计算p̂1-p̂2；多次重复得这些差值的分布；其均值=μ_p̂1-p̂2=p1-p2，标准差=√[p1(1-p1)/n1 + p2(1-p2)/n2]" },
+                { name: "Interpret the mean and sd of sampling distribution of the differences between 2 sample proportions（两样本比例差抽样分布的均值与标准差解释）", desc: "1. 均值解释：多次抽取两样本，比例差的平均值为两总体比例差p1-p2；2. 标准差解释：长期来看，两样本比例差与两总体比例差的平均距离为标准差" },
+                { name: "10% condition for sampling distribution of the differences between 2 sample proportions（两样本比例差抽样分布的10%条件）", desc: "需满足n1≤10%N1且n2≤10%N2（N1、N2为两总体量），确保样本独立性，使标准差公式有效" },
+                { name: "Large sample condition for differences of samples' proportions（两样本比例差的大样本条件）", desc: "需满足n1p1≥10、n1(1-p1)≥10、n2p2≥10、n2(1-p2)≥10，确保两样本比例差的抽样分布近似正态" },
+                { name: "Sampling distribution of sample mean（样本均值的抽样分布）", desc: "从总体中多次抽取大小为n的样本，计算每个样本的均值x̄，这些x̄构成的分布；其均值=总体均值（μ_x̄=μ），标准差=总体标准差/√n（σ_x̄=σ/√n）" },
+                { name: "10% condition for sampling distribution of sample mean（样本均值抽样分布的10%条件）", desc: "计算样本均值抽样分布标准差的公式仅当样本量n≤总体量N的10%时适用（保证独立性）" },
+                { name: "Large Number or Normal population condition for sampling distribution of sample mean（样本均值抽样分布的大样本或正态总体条件）", desc: "满足以下任一条件即可：1. 样本量n≥30（中心极限定理）；2. 总体近似正态分布（样本量可小于30）" },
+                { name: "Interpret the mean and sd of the sampling distribution of sample mean（样本均值抽样分布的均值与标准差解释）", desc: "1. 均值解释：多次抽取样本，样本均值的平均值为总体均值μ；2. 标准差解释：长期来看，样本均值与总体均值的平均距离为标准差" },
+                { name: "Sampling distribution of the differences between 2 sample means（两样本均值差的抽样分布）", desc: "从总体1抽n1样本得x̄1，从总体2抽n2样本得x̄2，计算x̄1-x̄2；多次重复得这些差值的分布；其均值=μ_x̄1-x̄2=μ1-μ2，标准差=√[σ1²/n1 + σ2²/n2]" },
+                { name: "10% condition for sampling distribution of the differences between 2 sample means（两样本均值差抽样分布的10%条件）", desc: "需满足n1≤10%N1且n2≤10%N2（N1、N2为两总体量），确保样本独立性，使标准差公式有效" },
+                { name: "Large Number or Normal population condition for sampling distribution of differences of sample means（两样本均值差抽样分布的大样本或正态总体条件）", desc: "两样本需分别满足：1. 样本量≥30；或2. 总体近似正态分布；确保均值差的抽样分布近似正态" },
+                { name: "Interpret the mean and sd of the differences between the sample means（两样本均值差抽样分布的均值与标准差解释）", desc: "1. 均值解释：多次抽取两样本，均值差的平均值为两总体均值差μ1-μ2；2. 标准差解释：长期来看，两样本均值差与两总体均值差的平均距离为标准差" }
+            ],
+            6: [
+                { name: "Procedure name: one-sample z interval for proportion（单样本比例z区间）", desc: "用于类别型变量、单样本比例的区间估计，通过样本比例估计总体比例的置信区间" },
+                { name: "Check independence condition for z interval: R + 10%（z区间的独立性条件检验）", desc: "1. 随机性（R）：数据需通过随机样本或随机实验收集（需结合题目背景描述）；2. 10%条件：样本量n≤总体量N的10%（需计算并说明）" },
+                { name: "Check Shape of sampling distribution of sample proportion: np, n(1-p)（样本比例抽样分布的形状检验）", desc: "当np≥10且n(1-p)≥10时，样本比例的抽样分布近似正态，可使用z区间" },
+                { name: "Standard error for CI for one proportion（单样本比例置信区间的标准误）", desc: "计算公式：SE_p̂=√[p̂(1-p̂)/n]（p̂为样本比例，n为样本量）" },
+                { name: "Margin of Error of CI for one proportion（单样本比例置信区间的边际误差）", desc: "计算公式：MoE=临界值×标准误；常用临界值：90%置信水平=1.64，95%=1.96，99%=2.57" },
+                { name: "Use Margin of Error to estimate n（用边际误差估计样本量）", desc: "已知MoE时，样本量n的估算公式：n=p̂(1-p̂)×(临界值/MoE)²；若p̂未知，用p̂=0.5（使n最大，保证精度）" },
+                { name: "CI of one-sample proportion（单样本比例置信区间）", desc: "计算公式：置信区间=样本比例±边际误差（p̂±MoE）" },
+                { name: "Interpret CI for one-sample p（单样本比例置信区间的解释）", desc: "“我们有XX%的置信度，该区间包含（结合题目背景的）总体比例的真实值”；例如：“我们有95%的置信度，该区间包含全校学生中喜欢数学的比例的真实值”" },
+                { name: "Interpret CL for one-sample p（单样本比例置信水平的解释）", desc: "“若多次使用该方法生成XX%置信区间，其中XX%的区间会包含（结合题目背景的）总体比例的真实值”" },
+                { name: "Use CI for convincing evidence for a claim（用置信区间判断主张的证据）", desc: "若区间内所有值均支持主张，则有充分证据；否则无充分证据；例如：区间[0.67,0.77]支持“p>0.5”的主张，区间[0.1,0.2]不支持“p<0”的主张" },
+                { name: "Interval width of one-sample z interval for p（单样本比例z区间的宽度）", desc: "区间宽度=2×边际误差（2MoE）；影响因素：1. 置信水平越高（临界值越大），宽度越大；2. p̂=0.5时宽度最大；3. 样本量n越大，宽度越小" },
+                { name: "Procedure name: One-sample z test is for proportion（单样本比例z检验）", desc: "用于类别型变量、单样本比例的假设检验，判断总体比例是否等于某一假设值" },
+                { name: "Null Hypothesis for one-sample z test for p（单样本比例z检验的原假设）", desc: "原假设H0：p=p0（永远为等号，p0为假设的总体比例）" },
+                { name: "Define the parameter in H0 and Ha（定义H0和Ha中的参数）", desc: "需明确p的含义：“p是（结合题目背景的）总体比例”；例如：“p是全校学生中喜欢运动的比例”" },
+                { name: "One-sided and Two sided alternative hypothesis（单边与双边备择假设）", desc: "单边备择假设：Ha:p>p0或Ha:p<p0（根据题目倾向判断）；双边备择假设：Ha:p≠p0（题目无倾向）" },
+                { name: "Check for independence condition for one-sample z test（单样本比例z检验的独立性条件检验）", desc: "同z区间的独立性条件：1. 随机性（数据来自随机样本/实验）；2. 10%条件（n≤10%N）；需结合题目背景描述" },
+                { name: "Check for (normal) shape for one-sample z test for proportion（单样本比例z检验的正态形状检验）", desc: "当np0≥10且n(1-p0)≥10时（p0为H0中的假设比例），样本比例的抽样分布近似正态，可使用z检验" },
+                { name: "General equation for test statistic（检验统计量的通用公式）", desc: "检验统计量=（样本统计量-总体参数）/标准误；即z=(p̂-p0)/SE" },
+                { name: "z-test statistic for proportion（比例的z检验统计量）", desc: "计算公式：z=(p̂-p0)/√[p0(1-p0)/n]；注意使用H0中的p0（非样本p̂）计算标准误" },
+                { name: "p-value interpretation for one-sample z test（单样本比例z检验的p值解释）", desc: "“若H0为真（结合题目背景），得到当前样本比例（或更极端）的概率为p值”；例如：“若总体比例p=0.5为真，得到样本比例0.6或更高的概率为0.03”" },
+                { name: "p-value calculation from table or calculator（p值的计算）", desc: "根据z检验统计量，通过z表或计算器计算；单边检验取单侧面积，双边检验取双侧面积之和" },
+                { name: "Significance level（显著性水平）", desc: "即α，用于判断p值是否足够小；常用α=0.05；若p值≤α，拒绝H0；若p值>α，不拒绝H0" },
+                { name: "Conclusion for one-sample z test for proportion (p-value>alpha)（单样本比例z检验的结论：p>α）", desc: "“p值>α，不拒绝H0，没有充分证据表明（结合题目背景的）Ha为真”；需包含题目背景" },
+                { name: "Conclusion for one-sample z test for proportion (p-value<=alpha)（单样本比例z检验的结论：p≤α）", desc: "“p值≤α，拒绝H0，有充分证据表明（结合题目背景的）Ha为真”；需包含题目背景" },
+                { name: "Where to include context in Conclusion（结论中背景的位置）", desc: "在描述Ha时加入题目背景，例如：“有充分证据表明全校学生中喜欢英语的比例大于0.6”" },
+                { name: "Do you ever have evidence that H0 is true?（是否有证据表明H0为真？）", desc: "假设检验中，仅能判断“有充分证据支持Ha”或“无充分证据支持Ha”，永远不能得出“H0为真”的结论" },
+                { name: "Do you do HT for the sample proportion or population proportion（假设检验针对样本还是总体比例？）", desc: "所有统计推断（包括假设检验和置信区间）均针对总体参数（如总体比例），样本统计量已知，无需推断" },
+                { name: "Type I error（第一类错误）", desc: "记忆口诀：ART（Alpha-Reject-True）；定义：拒绝了真实的H0的错误；α是犯第一类错误的概率" },
+                { name: "Type II Error（第二类错误）", desc: "记忆口诀：BFF（Beta-Fail to Reject-False）；定义：未拒绝虚假的H0的错误；β是犯第二类错误的概率" },
+                { name: "Power of the test（检验的功效）", desc: "定义：PRF（Probability of Reject a False H0）；即当H0为假时，拒绝H0的概率；Power=1-β" },
+                { name: "Factors affecting Beta and Power（影响β和功效的因素）", desc: "减少β（增加功效）的方法：1. 增加样本量n（减少标准误）；2. 增加α（α与β负相关）；3. 真实参数与H0中假设参数的差距越大，功效越大" },
+                { name: "Procedure name: Two sample z interval（两样本比例z区间）", desc: "用于类别型变量、两样本比例差的区间估计，估计两总体比例差的置信区间" },
+                { name: "Check independence condition for two-sample z interval（两样本比例z区间的独立性条件检验）", desc: "1. 随机性：两样本均来自随机样本/实验；2. 10%条件：n1≤10%N1且n2≤10%N2；需结合题目背景描述" },
+                { name: "Check Shape of sampling distribution of sample proportion（两样本比例z区间的形状检验）", desc: "两样本需分别满足np̂≥10且n(1-p̂)≥10，确保两样本比例差的抽样分布近似正态" },
+                { name: "CI for difference of two-sample z interval（两样本比例差的z区间）", desc: "计算公式：置信区间=（p̂1-p̂2）±临界值×√[p̂1(1-p̂1)/n1 + p̂2(1-p̂2)/n2]；常用临界值同单样本" },
+                { name: "Interpret CI for two-sample z interval（两样本比例差z区间的解释）", desc: "“我们有XX%的置信度，该区间包含（结合题目背景的）两总体比例差的真实值”；例如：“我们有95%的置信度，该区间包含男生和女生中喜欢篮球的比例差的真实值”" },
+                { name: "Interpret CL for two-sample z interval（两样本比例差z区间置信水平的解释）", desc: "“若多次使用该方法生成XX%置信区间，其中XX%的区间会包含（结合题目背景的）两总体比例差的真实值”" },
+                { name: "Procedure name: Two-sample z test for diff of proportions（两样本比例差的z检验）", desc: "用于类别型变量、两样本比例差的假设检验，判断两总体比例是否相等" },
+                { name: "Null Hypothesis for two-sample z test（两样本比例差z检验的原假设）", desc: "原假设H0：p1=p2（永远为等号）；需明确p1和p2的含义：“p1是（背景1）的总体比例，p2是（背景2）的总体比例”" },
+                { name: "One-sided and Two sided alternative hypothesis（两样本比例差的单边与双边备择假设）", desc: "单边备择假设：Ha:p1>p2或Ha:p1<p2（根据题目倾向判断）；双边备择假设：Ha:p1≠p2（题目无倾向）" },
+                { name: "Check independence condition for two-sample z test（两样本比例差z检验的独立性条件检验）", desc: "同两样本z区间的独立性条件：1. 两样本均随机；2. n1≤10%N1且n2≤10%N2；需分别说明两样本" },
+                { name: "Check Shape of sampling distribution of sample proportion（两样本比例差z检验的形状检验）", desc: "需使用合并比例pc=(x1+x2)/(n1+n2)（x1、x2为两样本成功数），满足n1pc≥10、n1(1-pc)≥10、n2pc≥10、n2(1-pc)≥10" },
+                { name: "z-test statistic for two-sample proportion（两样本比例差的z检验统计量）", desc: "计算公式：z=(p̂1-p̂2)/√[pc(1-pc)(1/n1 + 1/n2)]；pc为合并比例=(x1+x2)/(n1+n2)" }
+            ],
+            7: [
+                { name: "one-sample t interval for mean（单样本均值t区间）", desc: "用于数据型变量、单样本均值的区间估计，当总体标准差未知时使用t分布" },
+                { name: "t-distribution（t分布）", desc: "与正态分布类似的对称分布，尾部更厚，自由度越小尾部越厚；当样本量增大时接近正态分布" },
+                { name: "Degrees of freedom (df)（自由度）", desc: "单样本t区间的自由度df = n - 1（n为样本量）；影响t分布的形状" },
+                { name: "Check independence condition for one-sample t interval（单样本均值t区间的独立性条件检验）", desc: "1. 随机性：数据来自随机样本/实验；2. 10%条件：n≤10%N；需结合题目背景描述" },
+                { name: "Check normality condition for one-sample t interval（单样本均值t区间的正态性条件检验）", desc: "满足以下任一条件：1. 样本量n≥30（中心极限定理）；2. 样本量<30且样本数据近似正态（无明显偏斜和异常值）" },
+                { name: "Standard error for one-sample t interval（单样本均值t区间的标准误）", desc: "计算公式：SE = s/√n（s为样本标准差，n为样本量）" },
+                { name: "Critical t value for one-sample t interval（单样本均值t区间的临界t值）", desc: "根据置信水平和自由度df = n - 1，通过t表或计算器获取临界t值" },
+                { name: "CI for one-sample mean（单样本均值置信区间）", desc: "计算公式：置信区间 = x̄ ± t* × (s/√n)（x̄为样本均值，t*为临界t值）" },
+                { name: "Interpret CI for one-sample mean（单样本均值置信区间的解释）", desc: "“我们有XX%的置信度，该区间包含（结合题目背景的）总体均值的真实值”；例如：“我们有95%的置信度，该区间包含全校学生平均身高的真实值”" },
+                { name: "Procedure name: one-sample t test for mean（单样本均值t检验）", desc: "用于数据型变量、单样本均值的假设检验，当总体标准差未知时使用t分布" },
+                { name: "Null Hypothesis for one-sample t test（单样本均值t检验的原假设）", desc: "原假设H0：μ = μ0（永远为等号，μ0为假设的总体均值）；需明确μ的含义：“μ是（背景）的总体均值”" },
+                { name: "Alternative hypothesis for one-sample t test（单样本均值t检验的备择假设）", desc: "单边备择假设：Ha:μ > μ0或Ha:μ < μ0；双边备择假设：Ha:μ ≠ μ0；根据题目倾向判断" },
+                { name: "Check independence condition for one-sample t test（单样本均值t检验的独立性条件检验）", desc: "同t区间的独立性条件：1. 随机性；2. 10%条件；需结合题目背景描述" },
+                { name: "Check normality condition for one-sample t test（单样本均值t检验的正态性条件检验）", desc: "同t区间的正态性条件：1. n≥30；或2. n<30且数据近似正态（无明显偏斜和异常值）" },
+                { name: "t-test statistic for one-sample mean（单样本均值的t检验统计量）", desc: "计算公式：t = (x̄ - μ0)/(s/√n)（x̄为样本均值，μ0为H0中的假设均值，s为样本标准差）" },
+                { name: "p-value for one-sample t test（单样本均值t检验的p值）", desc: "根据t检验统计量和自由度df = n - 2，通过t表或计算器计算；单边检验取单侧面积，双边检验取双侧面积之和" },
+                { name: "Conclusion for one-sample t test（单样本均值t检验的结论）", desc: "同比例检验结论格式：p值≤α则拒绝H0，否则不拒绝H0；需包含题目背景" },
+                { name: "Procedure name: two-sample t interval for difference of means（两样本均值差的t区间）", desc: "用于数据型变量、两样本均值差的区间估计，估计两总体均值差的置信区间" },
+                { name: "Check independence condition for two-sample t interval（两样本均值差t区间的独立性条件检验）", desc: "1. 组内独立性：两样本均随机且n1≤10%N1、n2≤10%N2；2. 组间独立性：两样本相互独立（非配对数据）" },
+                { name: "Check normality condition for two-sample t interval（两样本均值差t区间的正态性条件检验）", desc: "两样本分别满足：1. n≥30；或2. n<30且数据近似正态（无明显偏斜和异常值）" },
+                { name: "Degrees of freedom for two-sample t interval（两样本均值差t区间的自由度）", desc: "使用计算器计算（通常df = min(n1-1, n2-1)或更精确的Welch-Satterthwaite近似值）" },
+                { name: "CI for difference of two means（两样本均值差的置信区间）", desc: "计算公式：(x̄1 - x̄2) ± t* × √(s1²/n1 + s2²/n2)（t*为临界t值）" },
+                { name: "Interpret CI for difference of two means（两样本均值差置信区间的解释）", desc: "“我们有XX%的置信度，该区间包含（结合背景的）两总体均值差μ1-μ2的真实值”" },
+                { name: "Procedure name: two-sample t test for difference of means（两样本均值差的t检验）", desc: "用于数据型变量、两样本均值差的假设检验，判断两总体均值是否相等" },
+                { name: "Null Hypothesis for two-sample t test（两样本均值差t检验的原假设）", desc: "原假设H0：μ1 = μ2（或μ1 - μ2 = 0）；需明确μ1和μ2的含义：“μ1是（背景1）的总体均值，μ2是（背景2）的总体均值”" },
+                { name: "Alternative hypothesis for two-sample t test（两样本均值差t检验的备择假设）", desc: "单边备择假设：Ha:μ1 > μ2或Ha:μ1 < μ2；双边备择假设：Ha:μ1 ≠ μ2；根据题目倾向判断" },
+                { name: "Check independence condition for two-sample t test（两样本均值差t检验的独立性条件检验）", desc: "同两样本t区间的独立性条件：组内独立且组间独立" },
+                { name: "Check normality condition for two-sample t test（两样本均值差t检验的正态性条件检验）", desc: "同两样本t区间的正态性条件：两样本分别满足n≥30或数据近似正态" },
+                { name: "t-test statistic for two-sample mean（两样本均值差的t检验统计量）", desc: "计算公式：t = (x̄1 - x̄2)/√(s1²/n1 + s2²/n2)" },
+                { name: "p-value for two-sample t test（两样本均值差t检验的p值）", desc: "根据t检验统计量和自由度，通过t表或计算器计算；单边检验取单侧面积，双边检验取双侧面积之和" },
+                { name: "Conclusion for two-sample t test（两样本均值差t检验的结论）", desc: "同其他检验结论格式：p值≤α则拒绝H0，否则不拒绝H0；需包含题目背景" },
+                { name: "Paired t-test（配对t检验）", desc: "用于配对数据（如同一对象前后测、双胞胎等）的均值差检验，将配对数据转化为单样本差值后进行t检验" },
+                { name: "Null Hypothesis for paired t-test（配对t检验的原假设）", desc: "原假设H0：μd = 0（μd为差值总体的均值，d = x1 - x2）" },
+                { name: "Check conditions for paired t-test（配对t检验的条件检验）", desc: "1. 差值数据来自随机样本/实验；2. 差值数据满足正态性条件（n≥30或数据近似正态）" },
+                { name: "t-test statistic for paired t-test（配对t检验的t检验统计量）", desc: "计算公式：t = (d̄ - 0)/(sd/√n)（d̄为样本差值的均值，sd为样本差值的标准差）" }
+            ],
+            8: [
+                { name: "Chi-square goodness-of-fit test（卡方拟合优度检验）", desc: "用于检验单个类别型变量的观测频数是否与理论频数一致，判断数据是否符合某一理论分布" },
+                { name: "Null Hypothesis for chi-square goodness-of-fit test（卡方拟合优度检验的原假设）", desc: "原假设H0：所有类别的总体比例等于理论比例（或符合某一理论分布）；例如：H0：骰子是均匀的（各面出现概率均为1/6）" },
+                { name: "Alternative hypothesis for chi-square goodness-of-fit test（卡方拟合优度检验的备择假设）", desc: "备择假设Ha：至少有一个类别的总体比例与理论比例不同" },
+                { name: "Check conditions for chi-square goodness-of-fit test（卡方拟合优度检验的条件检验）", desc: "1. 随机性：数据来自随机样本/实验；2. 期望频数：所有类别的期望频数≥5（若有个别类别<5，可合并相邻类别）" },
+                { name: "Expected count for chi-square goodness-of-fit test（卡方拟合优度检验的期望频数）", desc: "计算公式：期望频数 = 总样本量 × 理论比例" },
+                { name: "Chi-square test statistic（卡方检验统计量）", desc: "通用计算公式：χ² = Σ[(观测频数 - 期望频数)² / 期望频数]；值越大，表明观测与期望的差异越大" },
+                { name: "Degrees of freedom for chi-square goodness-of-fit test（卡方拟合优度检验的自由度）", desc: "计算公式：df = 类别数 - 1 - 估计参数个数（通常为df = k - 1，k为类别数）" },
+                { name: "p-value for chi-square test（卡方检验的p值）", desc: "根据卡方检验统计量和自由度，通过卡方分布表或计算器计算；p值为卡方分布右侧尾部的面积" },
+                { name: "Conclusion for chi-square goodness-of-fit test（卡方拟合优度检验的结论）", desc: "p值≤α则拒绝H0，表明数据与理论分布存在显著差异；否则不拒绝H0；需包含题目背景" },
+                { name: "Chi-square test for homogeneity（卡方同质性检验）", desc: "用于检验两个或多个独立样本的同一类别型变量的分布是否相同，即各总体的类别比例是否一致" },
+                { name: "Null Hypothesis for chi-square test for homogeneity（卡方同质性检验的原假设）", desc: "原假设H0：所有总体的类别分布相同（各总体中对应类别的比例相等）" },
+                { name: "Alternative hypothesis for chi-square test for homogeneity（卡方同质性检验的备择假设）", desc: "备择假设Ha：至少有一个类别的比例在不同总体中存在差异" },
+                { name: "Check conditions for chi-square test for homogeneity（卡方同质性检验的条件检验）", desc: "1. 随机性：各样本均随机且相互独立；2. 期望频数：所有单元格的期望频数≥5（若有个别<5，可合并相邻类别）" },
+                { name: "Expected count for chi-square test for homogeneity（卡方同质性检验的期望频数）", desc: "计算公式：期望频数 = (行合计 × 列合计) / 总样本量" },
+                { name: "Degrees of freedom for chi-square test for homogeneity（卡方同质性检验的自由度）", desc: "计算公式：df = (行数 - 1) × (列数 - 1)" },
+                { name: "Conclusion for chi-square test for homogeneity（卡方同质性检验的结论）", desc: "p值≤α则拒绝H0，表明不同总体的类别分布存在显著差异；否则不拒绝H0；需包含题目背景" },
+                { name: "Chi-square test for independence（卡方独立性检验）", desc: "用于检验同一个总体中两个类别型变量是否独立，即一个变量的取值是否与另一个变量的取值相关" },
+                { name: "Null Hypothesis for chi-square test for independence（卡方独立性检验的原假设）", desc: "原假设H0：两个变量相互独立（无关联）" },
+                { name: "Alternative hypothesis for chi-square test for independence（卡方独立性检验的备择假设）", desc: "备择假设Ha：两个变量不独立（有关联）" },
+                { name: "Check conditions for chi-square test for independence（卡方独立性检验的条件检验）", desc: "1. 随机性：样本随机且来自同一总体；2. 期望频数：所有单元格的期望频数≥5（若有个别<5，可合并相邻类别）" },
+                { name: "Expected count for chi-square test for independence（卡方独立性检验的期望频数）", desc: "计算公式：期望频数 = (行合计 × 列合计) / 总样本量（与同质性检验相同）" },
+                { name: "Degrees of freedom for chi-square test for independence（卡方独立性检验的自由度）", desc: "计算公式：df = (行数 - 1) × (列数 - 1)（与同质性检验相同）" },
+                { name: "Conclusion for chi-square test for independence（卡方独立性检验的结论）", desc: "p值≤α则拒绝H0，表明两个变量存在显著关联；否则不拒绝H0；需包含题目背景" },
+                { name: "Difference between homogeneity and independence test（同质性检验与独立性检验的区别）", desc: "同质性检验：比较多个总体的单一类别变量分布；独立性检验：检验同一总体中两个类别变量是否关联；计算方法相同，研究设计不同" },
+                { name: "Cell (Observed - Expected)² / Expected（单元格贡献值）", desc: "卡方检验统计量的组成部分，值越大表明该单元格的观测与期望差异越大，对卡方值的贡献越大" }
+            ],
+            9: [
+                { name: "Simple linear regression model（简单线性回归模型）", desc: "描述两个定量变量之间线性关系的模型：y = α + βx + ε，其中α为截距，β为斜率，ε为随机误差" },
+                { name: "Population regression line（总体回归直线）", desc: "描述总体中x和y之间真实线性关系的直线：μy = α + βx，其中μy为给定x时y的均值" },
+                { name: "Sample regression line（样本回归直线）", desc: "基于样本数据估计的回归直线：ŷ = a + bx，其中a为截距估计值，b为斜率估计值，ŷ为y的预测值" },
+                { name: "Slope of the regression line（回归直线的斜率）", desc: "斜率β表示x每增加1个单位时，y的平均变化量；样本斜率b是β的估计值" },
+                { name: "Y-intercept of the regression line（回归直线的y截距）", desc: "截距α表示x=0时y的均值；样本截距a是α的估计值；需结合背景解释其实际意义（若x=0有实际意义）" },
+                { name: "Residual（残差）", desc: "残差 = 观测值 - 预测值，即e = y - ŷ；表示实际值与模型预测值之间的差异" },
+                { name: "Residual plot（残差图）", desc: "以残差为纵轴、x或ŷ为横轴的散点图，用于评估线性模型的适用性；理想残差图应无明显模式" },
+                { name: "Conditions for inference for regression（回归推断的条件）", desc: "LINE条件：1. Linearity（线性）：x和y存在线性关系；2. Independence（独立性）：观测值相互独立；3. Normality（正态性）：给定x时，y的残差近似正态分布；4. Equal variance（等方差性）：残差的分布范围不随x变化" },
+                { name: "Check linearity condition（线性条件检验）", desc: "通过散点图和残差图判断：散点图应无明显曲线模式，残差图应无明显趋势" },
+                { name: "Check independence condition（独立性条件检验）", desc: "1. 数据来自随机样本/实验；2. 无明显时间或空间相关性（可通过残差图的随机模式辅助判断）" },
+                { name: "Check normality condition（正态性条件检验）", desc: "1. 样本量较大（n≥30）时，中心极限定理适用；2. 样本量较小时，通过残差的正态概率图或直方图判断是否近似正态" },
+                { name: "Check equal variance condition（等方差性条件检验）", desc: "通过残差图判断：残差的分布范围应大致均匀，不随x增大而明显变宽或变窄" },
+                { name: "Standard error of the estimate（估计标准误）", desc: "衡量残差大小的指标，即平均残差的标准差；值越小，模型拟合越好" },
+                { name: "t-interval for the slope（斜率的t区间）", desc: "用于估计总体回归斜率β的置信区间；计算公式：b ± t* × SEb（SEb为斜率的标准误，t*为临界t值）" },
+                { name: "Degrees of freedom for regression inference（回归推断的自由度）", desc: "计算公式：df = n - 2（n为样本量）" },
+                { name: "Interpret t-interval for the slope（斜率t区间的解释）", desc: "“我们有XX%的置信度，该区间包含总体回归斜率β的真实值”；结合背景可解释为：“我们有95%的置信度，x每增加1个单位时，y的平均变化量在区间范围内”" },
+                { name: "t-test for the slope（斜率的t检验）", desc: "用于检验总体回归斜率β是否为0，判断x和y之间是否存在显著线性关系" },
+                { name: "Null Hypothesis for t-test for the slope（斜率t检验的原假设）", desc: "原假设H0：β = 0（x和y之间无显著线性关系）" },
+                { name: "Alternative hypothesis for t-test for the slope（斜率t检验的备择假设）", desc: "单边备择假设：Ha:β > 0或Ha:β < 0（根据理论预期方向）；双边备择假设：Ha:β ≠ 0" },
+                { name: "t-test statistic for the slope（斜率的t检验统计量）", desc: "计算公式：t = (b - 0)/SEb（b为样本斜率，SEb为斜率的标准误）" },
+                { name: "p-value for t-test for the slope（斜率t检验的p值）", desc: "根据t检验统计量和自由度df = n - 2，通过t表或计算器计算；单边检验取单侧面积，双边检验取双侧面积之和" },
+                { name: "Conclusion for t-test for the slope（斜率t检验的结论）", desc: "p值≤α则拒绝H0，表明x和y之间存在显著线性关系；否则不拒绝H0；需包含题目背景" },
+                { name: "Coefficient of determination (r²)（决定系数）", desc: "表示y的总变异中可由x的变异通过线性模型解释的比例；取值范围[0,1]，值越大模型拟合越好" },
+                { name: "Interpret r²（决定系数的解释）", desc: "“约r²×100%的y的变异可以由x和y之间的线性关系解释”；例如：“r²=0.65表示约65%的y的变异可以由x解释”" },
+                { name: "Using computer output for regression inference（使用计算机输出进行回归推断）", desc: "从输出中提取：截距a、斜率b、斜率的标准误SEb、t检验统计量、p值、r²等，用于构建区间或进行检验" }
+            ]
+        };
+
+        // 全局变量
+        let selectedUnits = [5, 6, 7, 8, 9]; // 默认选中所有单元
+        let drawnConcepts = []; // 已抽取的概念记录
+        let selectedSeconds = 60; // 默认倒计时时间（秒）- 现在默认为1分钟
+        let countdownInterval; // 倒计时计时器
+
+        // DOM元素
+        const randomBtn = document.getElementById('randomBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const conceptCard = document.getElementById('conceptCard');
+        const initialHint = document.getElementById('initialHint');
+        const conceptUnit = document.getElementById('conceptUnit');
+        const conceptName = document.getElementById('conceptName');
+        const conceptDesc = document.getElementById('conceptDesc');
+        const conceptCount = document.getElementById('conceptCount');
+        const historyList = document.getElementById('historyList');
+        const selectAllBtn = document.getElementById('selectAll');
+        const deselectAllBtn = document.getElementById('deselectAll');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const timerOptions = document.querySelectorAll('.timer-option');
+        const timerContainer = document.getElementById('timerContainer');
+        const explanationContainer = document.getElementById('explanationContainer');
+        const countdownDisplay = document.getElementById('countdown');
+        const timerBar = document.getElementById('timerBar');
+        const showNowBtn = document.getElementById('showNowBtn');
+
+        // 更新选中的单元
+        function updateSelectedUnits() {
+            selectedUnits = [];
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedUnits.push(parseInt(checkbox.value));
+                }
+            });
+        }
+
+        // 设置倒计时时间
+        timerOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // 更新选中状态
+                timerOptions.forEach(opt => {
+                    opt.classList.remove('timer-btn-active');
+                    opt.classList.add('timer-btn-inactive');
+                });
+                option.classList.remove('timer-btn-inactive');
+                option.classList.add('timer-btn-active');
+                
+                // 保存选中的秒数
+                selectedSeconds = parseInt(option.dataset.seconds);
+            });
+        });
+
+        // 开始倒计时
+        function startCountdown() {
+            // 清除可能存在的计时器
+            clearInterval(countdownInterval);
+            
+            // 显示计时器，隐藏解释
+            timerContainer.classList.remove('hidden');
+            explanationContainer.classList.add('hidden');
+            
+            let secondsLeft = selectedSeconds;
+            updateCountdownDisplay(secondsLeft);
+            
+            // 设置计时器
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                updateCountdownDisplay(secondsLeft);
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    showExplanation();
+                }
+            }, 1000);
+        }
+
+        // 更新倒计时显示
+        function updateCountdownDisplay(seconds) {
+            // 格式化时间显示（MM:SS）
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            countdownDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            
+            // 更新进度条
+            const percentage = (seconds / selectedSeconds) * 100;
+            timerBar.style.width = `${percentage}%`;
+            
+            // 进度条颜色变化（从绿色到红色）
+            if (percentage > 50) {
+                timerBar.classList.remove('bg-yellow-500', 'bg-red-500');
+                timerBar.classList.add('bg-green-500');
+            } else if (percentage > 20) {
+                timerBar.classList.remove('bg-green-500', 'bg-red-500');
+                timerBar.classList.add('bg-yellow-500');
+            } else {
+                timerBar.classList.remove('bg-green-500', 'bg-yellow-500');
+                timerBar.classList.add('bg-red-500');
+            }
+        }
+
+        // 显示解释
+        function showExplanation() {
+            timerContainer.classList.add('hidden');
+            explanationContainer.classList.remove('hidden');
+        }
+
+        // 随机抽取概念
+        function drawRandomConcept() {
+            updateSelectedUnits();
+            
+            if (selectedUnits.length === 0) {
+                alert('请至少选择一个单元');
+                return;
+            }
+
+            // 收集所有可选概念
+            let availableConcepts = [];
+            selectedUnits.forEach(unit => {
+                statsConcepts[unit].forEach(concept => {
+                    // 检查是否已抽取（避免重复）
+                    const isDrawn = drawnConcepts.some(c => 
+                        c.unit === unit && c.name === concept.name
+                    );
+                    if (!isDrawn) {
+                        availableConcepts.push({...concept, unit});
+                    }
+                });
+            });
+
+            // 如果所有概念都已抽取，则重置
+            if (availableConcepts.length === 0) {
+                drawnConcepts = [];
+                selectedUnits.forEach(unit => {
+                    statsConcepts[unit].forEach(concept => {
+                        availableConcepts.push({...concept, unit});
+                    });
+                });
+            }
+
+            // 随机选择一个概念
+            const randomIndex = Math.floor(Math.random() * availableConcepts.length);
+            const selectedConcept = availableConcepts[randomIndex];
+            
+            // 显示概念
+            displayConcept(selectedConcept);
+            
+            // 添加到历史记录
+            addToHistory(selectedConcept);
+            
+            // 更新计数
+            drawnConcepts.push(selectedConcept);
+            updateCount();
+            
+            // 开始倒计时
+            startCountdown();
+        }
+
+        // 显示概念
+        function displayConcept(concept) {
+            // 显示卡片，隐藏初始提示
+            conceptCard.classList.remove('hidden');
+            initialHint.classList.add('hidden');
+            
+            // 更新内容
+            const unitClass = `unit${concept.unit}`;
+            const unitNames = {
+                5: "单元5：抽样分布",
+                6: "单元6：比例推断",
+                7: "单元7：均值推断",
+                8: "单元8：卡方检验",
+                9: "单元9：斜率推断"
+            };
+            
+            conceptUnit.textContent = unitNames[concept.unit];
+            conceptUnit.className = `text-sm font-bold px-3 py-1 rounded-full inline-block mb-3 bg-${unitClass}/10 text-${unitClass}`;
+            conceptName.textContent = concept.name;
+            conceptDesc.textContent = concept.desc;
+            
+            // 添加动画效果
+            conceptCard.classList.remove('animate-pop');
+            void conceptCard.offsetWidth; // 重置动画
+            conceptCard.classList.add('animate-pop');
+        }
+
+        // 添加到历史记录
+        function addToHistory(concept) {
+            const historyItem = document.createElement('div');
+            const unitClass = `unit${concept.unit}`;
+            
+            historyItem.className = `bg-gray-50 rounded-lg p-3 border-l-4 border-${unitClass} card-hover`;
+            historyItem.innerHTML = `
+                <div class="text-xs font-bold text-${unitClass} mb-1">${concept.unit}单元</div>
+                <div class="font-medium">${concept.name}</div>
+            `;
+            
+            // 点击历史记录项可重新查看该概念
+            historyItem.addEventListener('click', () => {
+                displayConcept(concept);
+                // 直接显示解释，不启动倒计时
+                timerContainer.classList.add('hidden');
+                explanationContainer.classList.remove('hidden');
+            });
+            
+            // 添加到历史列表开头
+            if (historyList.querySelector('.text-gray-500')) {
+                historyList.innerHTML = '';
+            }
+            historyList.prepend(historyItem);
+        }
+
+        // 更新计数
+        function updateCount() {
+            // 计算总可选概念数
+            let totalConcepts = 0;
+            selectedUnits.forEach(unit => {
+                totalConcepts += statsConcepts[unit].length;
+            });
+            
+            conceptCount.textContent = `已抽取：${drawnConcepts.length}/${totalConcepts}`;
+        }
+
+        // 全选
+        selectAllBtn.addEventListener('click', () => {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateSelectedUnits();
+        });
+
+        // 全不选
+        deselectAllBtn.addEventListener('click', () => {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateSelectedUnits();
+        });
+
+        // 立即查看按钮
+        showNowBtn.addEventListener('click', () => {
+            clearInterval(countdownInterval);
+            showExplanation();
+        });
+
+        // 事件监听
+        randomBtn.addEventListener('click', drawRandomConcept);
+        nextBtn.addEventListener('click', drawRandomConcept);
+
+        // 初始化
+        updateCount();
+    </script>
+</body>
+</html>
+    
