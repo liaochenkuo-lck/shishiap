@@ -82,7 +82,7 @@
                 </h1>
             </div>
             <div class="text-sm text-gray-500">
-                <p>共4个单元 · 76个核心概念</p>
+                <p>共4个单元 · 172个核心概念</p>
             </div>
         </div>
     </header>
@@ -101,22 +101,22 @@
                         <!-- 单元1 -->
                         <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit1 cursor-pointer transition-all">
                             <input type="checkbox" value="1" class="form-checkbox h-5 w-5 text-unit1 mr-2" checked>
-                            <span class="font-medium text-unit1">单元1：探索数据</span>
+                            <span class="font-medium text-unit1">单元1：探索单变量数据</span>
                         </label>
                         <!-- 单元2 -->
                         <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit2 cursor-pointer transition-all">
                             <input type="checkbox" value="2" class="form-checkbox h-5 w-5 text-unit2 mr-2" checked>
-                            <span class="font-medium text-unit2">单元2：实验设计</span>
+                            <span class="font-medium text-unit2">单元2：探索双变量数据</span>
                         </label>
                         <!-- 单元3 -->
                         <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit3 cursor-pointer transition-all">
                             <input type="checkbox" value="3" class="form-checkbox h-5 w-5 text-unit3 mr-2" checked>
-                            <span class="font-medium text-unit3">单元3：概率基础</span>
+                            <span class="font-medium text-unit3">单元3：收集数据</span>
                         </label>
                         <!-- 单元4 -->
                         <label class="flex items-center p-3 rounded-lg border-2 border-transparent hover:border-unit4 cursor-pointer transition-all">
                             <input type="checkbox" value="4" class="form-checkbox h-5 w-5 text-unit4 mr-2" checked>
-                            <span class="font-medium text-unit4">单元4：概率分布</span>
+                            <span class="font-medium text-unit4">单元4：概率与分布</span>
                         </label>
                     </div>
                     
@@ -153,7 +153,7 @@
                     <!-- 概念结果卡片 -->
                     <div id="conceptCard" class="w-full bg-white rounded-xl shadow-lg border-4 border-primary/30 p-6 card-hover hidden animate-pop">
                         <div id="conceptUnit" class="text-sm font-bold px-3 py-1 rounded-full inline-block mb-3 bg-primary/10 text-primary">
-                            单元1：探索数据
+                            单元1：探索单变量数据
                         </div>
                         <h3 id="conceptName" class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-4 text-center">
                             Categorical Variable（分类变量）
@@ -187,7 +187,7 @@
                         
                         <div class="flex justify-between items-center">
                             <span id="conceptCount" class="text-gray-500">
-                                已抽取：0/76
+                                已抽取：0/172
                             </span>
                             <button id="nextBtn" class="btn-custom bg-primary/90 hover:bg-primary">
                                 <i class="fa fa-refresh mr-1"></i>再抽一个
@@ -241,427 +241,451 @@
             clone.addEventListener('ended', () => clone.remove());
         }
 
-        // 统计学概念数据（1-4单元）
+        // 统计学概念数据（1-4单元）- 根据提供的列表更新
         const statsConcepts = {
             1: [
-                { name: "Categorical Variable（分类变量）", desc: "描述个体的类别或分组的变量，其值为标签或名称，而非数字。例如：性别（男/女）、血型（A/B/AB/O）等。" },
-                { name: "Quantitative Variable（定量变量）", desc: "取值为数值的变量，这些数值具有数学意义（可以进行加减等运算）。例如：身高、体重、年龄等。" },
-                { name: "Discrete Variable（离散变量）", desc: "只能取特定数值的定量变量，通常是计数结果，数值之间存在间隔。例如：一个家庭的孩子数量、骰子的点数等。" },
-                { name: "Continuous Variable（连续变量）", desc: "可以在一个区间内取任何数值的定量变量，通常是测量结果，可以无限细分。例如：身高、体重、时间等。" },
-                { name: "Univariate Data（单变量数据）", desc: "只涉及一个变量的数据集合，用于研究该单个变量的分布和特征。例如：一个班级所有学生的身高数据。" },
-                { name: "Bivariate Data（双变量数据）", desc: "涉及两个变量的数据集合，用于研究两个变量之间的关系。例如：一组学生的身高和体重数据。" },
-                { name: "Distribution of a Variable（变量的分布）", desc: "描述变量所有可能取值以及这些取值出现的频率或概率的情况，包括形状、中心和分布范围三个主要特征。" },
-                { name: "Frequency Table（频数表）", desc: "将数据按类别或区间分组，并记录每个组中观测值数量（频数）的表格，用于汇总和简化数据。" },
-                { name: "Bar Graph（条形图）", desc: "用于展示分类变量分布的图形，横轴表示类别，纵轴表示频数或频率，每个类别用一个矩形条表示，条的高度与频数成正比。" },
-                { name: "Pie Chart（饼图）", desc: "用于展示分类变量分布的图形，整个圆代表数据的总和（100%），每个扇形的大小与相应类别的比例成正比。" },
-                { name: "Pareto Chart（帕累托图）", desc: "一种特殊的条形图，条形按频数从高到低排列，同时叠加累积频率曲线，用于识别最重要的类别。" },
-                { name: "Dot Plot（点图）", desc: "用于展示定量变量分布的图形，每个数据点用一个点表示，点在数轴上的位置对应数据值，点的数量表示频数。" },
-                { name: "Stem-and-Leaf Plot（茎叶图）", desc: "将每个数据值分为茎（高位数字）和叶（低位数字），茎按顺序排列，叶在相应茎的右侧，既保留原始数据又展示分布形状。" },
-                { name: "Histogram（直方图）", desc: "用于展示连续型定量变量分布的图形，横轴划分为连续区间（组距），纵轴表示每个区间内的频数或频率，区间之间无间隔。" },
-                { name: "Relative Frequency（相对频率）", desc: "某一类别或区间的频数除以总观测数，通常以比例或百分比表示，反映该类别在总体中所占的比例。" },
-                { name: "Shape of a Distribution（分布形状）", desc: "数据分布的外观特征，包括：对称型、偏斜型（左偏/右偏）、是否有峰值（单峰/双峰/多峰）、是否有异常值等。" },
-                { name: "Symmetric Distribution（对称分布）", desc: "沿着中心轴左右对称的分布，均值和中位数大致相等。例如：正态分布是典型的对称分布。" },
-                { name: "Skewed Distribution（偏态分布）", desc: "不对称的分布：右偏分布（尾部向右延伸，均值>中位数）；左偏分布（尾部向左延伸，均值<中位数）。" },
-                { name: "Unimodal, Bimodal, Multimodal（单峰、双峰、多峰）", desc: "分布中峰值的数量：单峰（一个明显的峰值）、双峰（两个明显的峰值）、多峰（两个以上的峰值）。" },
-                { name: "Outlier（异常值）", desc: "与数据集中其他值相比明显偏大或偏小的观测值，可能是测量错误、数据录入错误或真实的极端值。" },
-                { name: "Measures of Center（中心度量）", desc: "描述数据集中趋势的统计量，主要包括均值、中位数和众数，用于表示数据的典型值或中心位置。" },
-                { name: "Mean（均值）", desc: "所有数据值的总和除以数据个数，是最常用的中心度量，但容易受异常值影响。计算公式：x̄ = (x₁ + x₂ + ... + xₙ)/n。" },
-                { name: "Median（中位数）", desc: "将数据按大小排序后位于中间位置的值，不受极端值影响，适用于偏态分布数据。对于n个数据，位置为(n+1)/2。" },
-                { name: "Mode（众数）", desc: "数据集中出现次数最多的值，可用于描述分类变量和定量变量的中心趋势，一个数据集可能有多个众数。" },
-                { name: "Resistant Measure（抗干扰度量）", desc: "不易受极端值（异常值）影响的统计量，如中位数和四分位距是抗干扰的，而均值和极差则不是。" },
-                { name: "Measures of Spread（离散程度度量）", desc: "描述数据分散或变异程度的统计量，包括极差、四分位距、方差和标准差等。" },
-                { name: "Range（极差）", desc: "数据集中最大值与最小值之差，计算公式：Range = Max - Min，简单但受异常值影响大。" },
-                { name: "Quartiles（四分位数）", desc: "将排序后的数据分为四等份的三个值：Q1（第一四分位数，25%位置）、Q2（第二四分位数，即中位数，50%位置）、Q3（第三四分位数，75%位置）。" },
-                { name: "Interquartile Range (IQR)（四分位距）", desc: "第三四分位数与第一四分位数之差，计算公式：IQR = Q3 - Q1，用于描述中间50%数据的离散程度，不受异常值影响。" },
-                { name: "Five-Number Summary（五数概括）", desc: "由最小值、Q1、中位数（Q2）、Q3和最大值组成的统计量集合，全面概括数据的分布特征。" },
-                { name: "Boxplot（箱线图）", desc: "基于五数概括绘制的图形，展示数据的中心、离散程度和分布形状，箱子从Q1延伸到Q3，中线为中位数，须线通常延伸到1.5×IQR范围内的最值。" },
-                { name: "Variance（方差）", desc: "各数据值与均值之差的平方的平均值，衡量数据的平均平方偏差，计算公式：s² = Σ(xᵢ - x̄)²/(n-1)（样本方差）。" },
-                { name: "Standard Deviation（标准差）", desc: "方差的平方根，与原始数据具有相同的单位，更直观地衡量数据的平均偏差，计算公式：s = √s²。" },
-                { name: "z-score（z分数）", desc: "衡量一个数据值距离均值多少个标准差的统计量，计算公式：z = (x - x̄)/s，用于比较不同数据集或不同变量的观测值相对位置。" },
-                { name: "Empirical Rule（经验法则）", desc: "对于近似正态分布的数据：约68%的数据在均值±1个标准差范围内；约95%在±2个标准差范围内；约99.7%在±3个标准差范围内。" },
-                { name: "Cumulative Relative Frequency Graph（累积相对频率图）", desc: "横轴为数据值，纵轴为累积相对频率（小于等于该值的数据比例）的图形，用于估计百分位数和数据分布情况。" },
-                { name: "Percentile（百分位数）", desc: "表示在数据集中，有特定百分比的数据小于或等于该值。例如：第80百分位数是指有80%的数据小于或等于该值。" },
-                { name: "Scatterplot（散点图）", desc: "用于展示两个定量变量之间关系的图形，每个点代表一对(x,y)值，点的位置由其x和y值确定，用于观察变量间的相关性、方向和形式。" },
-                { name: "Correlation Coefficient (r)（相关系数）", desc: "衡量两个定量变量之间线性关系强度和方向的统计量，取值范围为[-1,1]，r>0为正相关，r<0为负相关，|r|越接近1，线性关系越强。" },
-                { name: "Association（关联）", desc: "两个变量之间的某种关系，当一个变量的值变化时，另一个变量的值也倾向于以某种方式变化，关联不一定意味着因果关系。" },
-                { name: "Positive Association（正关联）", desc: "两个变量之间的关系，当一个变量的值增加时，另一个变量的值也倾向于增加。例如：身高和体重通常呈正关联。" },
-                { name: "Negative Association（负关联）", desc: "两个变量之间的关系，当一个变量的值增加时，另一个变量的值倾向于减少。例如：商品价格和销售量通常呈负关联。" },
-                { name: "Strength of Association（关联强度）", desc: "描述两个变量之间关系密切程度的指标，对于线性关系，相关系数r的绝对值越接近1，关联强度越大。" },
-                { name: "Linear Relationship（线性关系）", desc: "两个变量之间的关系可以用一条直线近似表示，散点图中的点大致围绕一条直线分布。" },
-                { name: "Nonlinear Relationship（非线性关系）", desc: "两个变量之间的关系不能用直线近似表示，而呈现曲线或其他复杂形式，相关系数r可能无法准确衡量这种关系。" },
-                { name: "Lurking Variable（潜伏变量）", desc: "未被研究但可能影响研究中变量关系的变量，可能导致两个变量之间出现虚假关联或掩盖真实关联。" }
+                { name: "variables（变量）", desc: "描述个体特征的可测量属性，其值可能因个体而异。" },
+                { name: "categorical variable（分类变量）", desc: "描述个体所属类别的变量，其值为非数值型的标签或名称。" },
+                { name: "quantitative variable（定量变量）", desc: "取值为数值的变量，这些数值具有数学意义，可以进行计算和比较。" },
+                { name: "frequency（频数）", desc: "某个类别或数值在数据集中出现的次数。" },
+                { name: "relative frequency（相对频数）", desc: "某类别频数与总观测数的比值，反映该类别在总体中所占的比例。" },
+                { name: "proportion（比例）", desc: "表示总体中具有某种特征的部分占总体的分数值，取值范围为[0,1]。" },
+                { name: "rates（比率）", desc: "两个相关数量的比值，通常用于表示某种现象发生的频率，如发生率、死亡率等。" },
+                { name: "percentages（百分比）", desc: "将比例乘以100得到的数值，表示每100个单位中包含的特定部分的数量。" },
+                { name: "bar charts（条形图）", desc: "用矩形条表示分类数据的图形，条的长度或高度与类别对应的频数或频率成正比。" },
+                { name: "frequency tables（频数表）", desc: "将数据按类别或区间分组，并记录每个组的频数的表格，用于汇总数据。" },
+                { name: "discrete variable（离散变量）", desc: "只能取特定数值的定量变量，通常是计数结果，数值之间存在间隔。" },
+                { name: "continuous variable（连续变量）", desc: "可以在一个区间内取任何数值的定量变量，通常是测量结果，可以无限细分。" },
+                { name: "histogram（直方图）", desc: "用于展示连续型定量变量分布的图形，横轴为数据区间，纵轴为每个区间的频数或频率。" },
+                { name: "interval widths（区间宽度）", desc: "直方图中每个区间的长度，区间宽度的选择会影响直方图的形状。" },
+                { name: "describe distribution（描述分布）", desc: "分析数据分布的主要特征，包括形状、中心、离散程度和异常特征。" },
+                { name: "shape（形状）", desc: "数据分布的外观特征，如对称、偏斜、单峰、多峰等。" },
+                { name: "center（中心）", desc: "数据分布的中心位置，通常用均值、中位数等统计量来描述。" },
+                { name: "variability（离散性）", desc: "数据值之间的分散程度，反映数据的变异情况。" },
+                { name: "unusual features（异常特征）", desc: "数据分布中不常见的特征，如异常值、间隙、聚类等。" },
+                { name: "outliers（异常值）", desc: "与数据集中其他值相比明显偏大或偏小的观测值。" },
+                { name: "gaps（间隙）", desc: "数据分布中没有观测值的区域。" },
+                { name: "clusters（聚类）", desc: "数据集中观测值密集分布的区域。" },
+                { name: "multiple peaks（多峰）", desc: "数据分布中存在多个明显的峰值，表明数据可能来自多个不同的群体。" },
+                { name: "skewed to the right（右偏）", desc: "数据分布的尾部向右延伸，均值大于中位数。" },
+                { name: "positive skew（正偏）", desc: "即右偏分布，指数据集中大部分值集中在左侧，右侧有少数较大的值。" },
+                { name: "skewed to the left（左偏）", desc: "数据分布的尾部向左延伸，均值小于中位数。" },
+                { name: "negative skew（负偏）", desc: "即左偏分布，指数据集中大部分值集中在右侧，左侧有少数较小的值。" },
+                { name: "symmetric（对称）", desc: "数据分布围绕中心轴左右对称，均值和中位数大致相等。" },
+                { name: "uni-variate（单变量）", desc: "仅涉及一个变量的数据或分析。" },
+                { name: "bimodal（双峰）", desc: "具有两个明显峰值的分布，表明数据可能来自两个不同的群体。" },
+                { name: "uni-modal（单峰）", desc: "具有一个明显峰值的分布，表明数据集中在一个主要的中心区域。" },
+                { name: "conjectures（推测）", desc: "基于数据观察提出的假设或推测，需要进一步验证。" },
+                { name: "statistic（统计量）", desc: "描述样本特征的数值，如样本均值、样本标准差等。" },
+                { name: "mean（均值）", desc: "所有数据值的总和除以数据个数，是常用的中心度量。" },
+                { name: "median（中位数）", desc: "将数据按大小排序后位于中间位置的值，不受极端值影响。" },
+                { name: "Q1（第一四分位数）", desc: "将排序后的数据分为四等份，位于25%位置的值，表示有25%的数据小于或等于该值。" },
+                { name: "first quartile（第一四分位数）", desc: "同Q1，将数据分为四等份，处于25%位置的数值。" },
+                { name: "third quartile（第三四分位数）", desc: "同Q3，将数据分为四等份，处于75%位置的数值。" },
+                { name: "Q3（第三四分位数）", desc: "将排序后的数据分为四等份，位于75%位置的值，表示有75%的数据小于或等于该值。" },
+                { name: "pth percentile（第p百分位数）", desc: "表示在数据集中，有p%的数据小于或等于该值。" },
+                { name: "inter-quartile range（四分位距）", desc: "第三四分位数与第一四分位数之差（IQR = Q3 - Q1），描述中间50%数据的离散程度。" },
+                { name: "standard deviation（标准差）", desc: "方差的平方根，衡量数据偏离均值的平均程度，与原始数据单位相同。" },
+                { name: "variance（方差）", desc: "各数据值与均值之差的平方的平均值，衡量数据的离散程度。" },
+                { name: "nonresistant（非抗干扰的）", desc: "容易受极端值影响的统计量，如均值和极差。" },
+                { name: "five-number summary（五数概括）", desc: "由最小值、Q1、中位数、Q3和最大值组成的统计量集合，用于描述数据分布。" },
+                { name: "box-plot（箱线图）", desc: "基于五数概括绘制的图形，展示数据的中心、离散程度和分布形状。" },
+                { name: "whiskers（须线）", desc: "箱线图中从箱子延伸出来的线，通常表示数据的范围（除去异常值）。" },
+                { name: "side-by-side box plots（并列箱线图）", desc: "将多个箱线图并排绘制，用于比较不同组数据的分布特征。" },
+                { name: "parameter（参数）", desc: "描述总体特征的数值，通常是未知的，需要通过样本统计量来估计。" },
+                { name: "normal distribution model（正态分布模型）", desc: "一种对称的钟形分布，许多自然现象都近似遵循正态分布。" },
+                { name: "empirical rule（经验法则）", desc: "对于正态分布，约68%的数据在均值±1个标准差范围内，约95%在±2个标准差范围内，约99.7%在±3个标准差范围内。" },
+                { name: "standardized score（标准化分数）", desc: "即z分数，衡量一个数据值距离均值多少个标准差的位置。" },
+                { name: "z-score（z分数）", desc: "计算公式为z = (x - μ)/σ，用于比较不同数据集中的观测值相对位置。" },
+                { name: "area of a region under the graph of density curve（密度曲线下某区域的面积）", desc: "表示数据落在该区域内的概率，整个密度曲线下的面积为1。" }
             ],
             2: [
-                { name: "Individuals（个体）", desc: "研究中所关注的对象或实体，可以是个人、动物、物品等。例如：在研究学生成绩时，每个学生就是一个个体。" },
-                { name: "Variable（变量）", desc: "个体的某种特征，不同个体可能有不同的值。例如：在研究学生时，身高、体重、成绩等都是变量。" },
-                { name: "Population（总体）", desc: "研究中所有感兴趣的个体的集合。例如：研究某中学学生的身高时，该中学的所有学生构成了总体。" },
-                { name: "Sample（样本）", desc: "从总体中选取的一部分个体，用于代表总体进行研究。样本应具有代表性，以确保研究结果可以推广到总体。" },
-                { name: "Parameter（参数）", desc: "描述总体特征的数值，通常是未知的，需要通过样本统计量来估计。例如：总体均值μ、总体比例p等。" },
-                { name: "Statistic（统计量）", desc: "描述样本特征的数值，根据样本数据计算得到，用于估计总体参数。例如：样本均值x̄、样本比例p̂等。" },
-                { name: "Census（普查）", desc: "对总体中的每一个个体都进行测量或调查的方法，可以获得总体参数的准确值，但通常成本高、耗时长。" },
-                { name: "Sampling（抽样）", desc: "从总体中选取样本的过程，目的是通过对样本的研究来推断总体特征，相比普查更经济高效。" },
-                { name: "Bias（偏差）", desc: "研究设计或实施过程中存在的系统性误差，导致统计量持续偏离其所要估计的参数，影响结果的准确性。" },
-                { name: "Selection Bias（选择偏差）", desc: "由于样本选取方法不当，导致样本不能代表总体而产生的偏差。例如：仅调查上网人群的意见可能存在选择偏差。" },
-                { name: "Voluntary Response Bias（自愿回应偏差）", desc: "当样本由自愿参与的个体组成时产生的偏差，通常自愿参与者与非参与者在某些方面存在差异，导致结果失真。" },
-                { name: "Nonresponse Bias（无回应偏差）", desc: "由于部分被选中的个体未能参与调查或提供数据，而这些无回应者与回应者可能存在差异所产生的偏差。" },
-                { name: "Response Bias（回应偏差）", desc: "由于问题设计、调查环境或受访者心理等原因，导致受访者提供不准确或不真实回答所产生的偏差。" },
-                { name: "Random Sampling（随机抽样）", desc: "使总体中的每个个体都有已知的、非零的机会被选中进入样本的抽样方法，有助于减少偏差，提高样本的代表性。" },
-                { name: "Simple Random Sample (SRS)（简单随机样本）", desc: "从总体中随机选取n个个体，使得总体中所有可能的n个个体的组合都有相等的被选中概率的抽样方法。" },
-                { name: "Stratified Random Sample（分层随机样本）", desc: "将总体按某些特征分为若干层（strata），然后从每个层中独立地进行随机抽样，适用于总体内部差异较大的情况。" },
-                { name: "Cluster Sample（整群样本）", desc: "将总体分为若干个群（clusters），随机选取部分群，并对选中群中的所有个体进行调查，适用于群内差异大而群间差异小的情况。" },
-                { name: "Systematic Sample（系统样本）", desc: "将总体中的个体按某种顺序排列，随机选择一个起始点，然后按照固定间隔选取个体组成样本的抽样方法。" },
-                { name: "Convenience Sample（便利样本）", desc: "基于便利性选取样本的非随机抽样方法，如调查容易接触到的个体，可能存在较大偏差，样本代表性差。" },
-                { name: "Observational Study（观察性研究）", desc: "研究者仅观察和记录个体的特征和行为，不干预或操纵变量的研究方法，不能确定因果关系，只能发现关联。" },
-                { name: "Experiment（实验）", desc: "研究者主动操纵一个或多个变量（处理），并观察其对其他变量的影响的研究方法，通过控制其他因素，可以推断因果关系。" },
-                { name: "Experimental Unit（实验单元）", desc: "实验中接受处理的对象，可以是个体、物品或其他实体。例如：在药物试验中，每个参与的病人就是一个实验单元。" },
-                { name: "Treatment（处理）", desc: "实验中研究者施加给实验单元的条件或干预。例如：在肥料试验中，不同种类或剂量的肥料就是不同的处理。" },
-                { name: "Explanatory Variable（解释变量）", desc: "在实验中被研究者操纵或改变的变量，用于解释或预测其他变量的变化，也称为自变量。" },
-                { name: "Response Variable（响应变量）", desc: "在实验中被观察或测量的变量，其变化被认为可能受到解释变量的影响，也称为因变量。" },
-                { name: "Confounding Variable（混杂变量）", desc: "与解释变量和响应变量都相关的变量，可能导致对因果关系的错误推断，无法区分其与解释变量对响应变量的影响。" },
-                { name: "Control Group（对照组）", desc: "在实验中不接受处理或接受标准处理的组，用于与接受处理的组进行比较，以评估处理效果。" },
-                { name: "Placebo（安慰剂）", desc: "一种看起来与实际处理相似但没有实际效果的物质或处理，常用于对照实验中，以消除心理因素的影响。" },
-                { name: "Placebo Effect（安慰剂效应）", desc: "由于参与者相信自己接受了有效处理而产生的对响应变量的影响，即使他们实际上接受的是安慰剂。" },
-                { name: "Blinding（盲法）", desc: "在实验中不让参与者或研究者知道谁接受了何种处理的方法，用于减少偏见和心理因素对结果的影响。" },
-                { name: "Single-Blind Experiment（单盲实验）", desc: "只有参与者不知道自己接受的是何种处理，而研究者知道的实验设计。" },
-                { name: "Double-Blind Experiment（双盲实验）", desc: "参与者和研究者都不知道谁接受了何种处理的实验设计，能更有效地减少偏见。" },
-                { name: "Random Assignment（随机分配）", desc: "将实验单元随机分配到不同处理组的过程，有助于确保各组在实验开始时具有可比性，减少混杂变量的影响。" },
-                { name: "Replication（重复）", desc: "在实验中对每个处理进行多次重复的过程，即每个处理组包含多个实验单元，有助于提高实验结果的可靠性和精确度。" },
-                { name: "Blocking（区组）", desc: "将实验单元按某些已知可能影响结果的特征分为若干区组（blocks），在每个区组内进行随机分配，以减少变异，提高实验效率。" },
-                { name: "Completely Randomized Design（完全随机设计）", desc: "将所有实验单元完全随机地分配到不同处理组的实验设计，适用于实验单元较为同质的情况。" },
-                { name: "Randomized Block Design（随机区组设计）", desc: "先将实验单元分为区组，再在每个区组内将单元随机分配到不同处理组的实验设计，可控制区组变量带来的变异。" },
-                { name: "Matched Pairs Design（配对设计）", desc: "一种特殊的随机区组设计，每个区组包含两个相似的实验单元，分别接受两种处理；或对同一单元在处理前后进行测量，以减少个体差异的影响。" }
+                { name: "side-by-side bar graphs（并列条形图）", desc: "将多个条形图并排绘制，用于比较不同组的分类数据分布。" },
+                { name: "segmented bar graph（分段条形图）", desc: "用一个条形的不同分段表示总体中不同类别的比例，便于比较各类别在不同组中的相对比例。" },
+                { name: "mosaic plots（马赛克图）", desc: "用于展示两个分类变量关系的图形，矩形的面积与相应类别的频数成比例。" },
+                { name: "two-way table（双向表）", desc: "展示两个分类变量数据分布的表格，行表示一个变量的类别，列表示另一个变量的类别。" },
+                { name: "contingency table（列联表）", desc: "即双向表，用于分析两个分类变量之间的关系。" },
+                { name: "joint relative frequency（联合相对频数）", desc: "双向表中某个单元格的频数与总频数的比值，表示两个变量同时取特定值的比例。" },
+                { name: "marginal relative frequencies（边缘相对频数）", desc: "双向表中行合计或列合计与总频数的比值，只涉及一个变量的分布。" },
+                { name: "conditional relative frequency（条件相对频数）", desc: "在给定某个变量取特定值的条件下，另一个变量取某值的相对频数。" },
+                { name: "check for independence/association in two-way table（在双向表中检验独立性/关联性）", desc: "通过比较条件分布和边缘分布，判断两个分类变量是否独立或存在关联。" },
+                { name: "bi-variate（双变量）", desc: "涉及两个变量的数据或分析，用于研究两个变量之间的关系。" },
+                { name: "scatter-plot（散点图）", desc: "用点表示两个定量变量观测值的图形，每个点代表一对(x,y)值，用于观察变量间的关系。" },
+                { name: "explanatory variable（解释变量）", desc: "被认为可能影响其他变量的变量，通常在散点图的横轴上表示。" },
+                { name: "response variable（响应变量）", desc: "被认为可能受其他变量影响的变量，通常在散点图的纵轴上表示。" },
+                { name: "describe scatter plot: FUDS（描述散点图：FUDS）", desc: "FUDS指Form（形式）、Unusual features（异常特征）、Direction（方向）、Strength（强度），是描述散点图的四个维度。" },
+                { name: "describe form in scatter plot（描述散点图的形式）", desc: "指变量间关系的形状，如线性、非线性（曲线等）。" },
+                { name: "direction in describing the scatter plot（描述散点图的方向）", desc: "指变量间关系的趋势，如正相关（一个变量增加，另一个也增加）或负相关（一个变量增加，另一个减少）。" },
+                { name: "strength in describing the scatter plot（描述散点图的强度）", desc: "指变量间关系的密切程度，点越集中在某种模式周围，关系越强。" },
+                { name: "unusual features in the scatter plot（散点图中的异常特征）", desc: "如异常点（远离整体模式的点）、聚类等。" },
+                { name: "positive or negative direction（正方向或负方向）", desc: "正方向指变量同增同减，负方向指一个变量增加而另一个减少。" },
+                { name: "linear / nonlinear form（线性/非线性形式）", desc: "线性形式指变量间关系可用直线近似，非线性形式则需要曲线等其他形式描述。" },
+                { name: "strong, moderate, or weak（强、中、弱）", desc: "描述变量间关系的密切程度，相关系数的绝对值接近1为强，接近0为弱。" },
+                { name: "correlation, r interpretation（相关系数r的解释）", desc: "相关系数r衡量两个定量变量线性关系的强度和方向，取值范围为[-1,1]，r>0为正相关，r<0为负相关，|r|越接近1关系越强。" },
+                { name: "correlation does not necessarily imply causation（相关不一定意味着因果）", desc: "两个变量相关可能是由于巧合、共同的潜在变量影响，不一定存在直接的因果关系。" },
+                { name: "predicted response（预测响应值）", desc: "根据回归模型对响应变量的估计值。" },
+                { name: "y-intercept（y轴截距）", desc: "回归直线与y轴的交点，当解释变量为0时响应变量的预测值。" },
+                { name: "slope (b) interpretation（斜率b的解释）", desc: "表示解释变量每增加一个单位，响应变量的平均变化量。" },
+                { name: "extrapolate（外推）", desc: "使用回归模型预测超出数据范围的解释变量对应的响应变量值，存在较大不确定性。" },
+                { name: "residual（残差）", desc: "观测值与预测值之间的差异，计算公式为残差 = 观测值 - 预测值。" },
+                { name: "residual plot（残差图）", desc: "以解释变量为横轴、残差为纵轴的散点图，用于评估回归模型的适用性。" },
+                { name: "apparent randomness in a residual plot（残差图中的明显随机性）", desc: "如果残差图呈现随机分布，无明显模式，说明线性模型是合适的。" },
+                { name: "appropriateness of a selected model（所选模型的适用性）", desc: "评估模型是否能很好地拟合数据，如线性模型是否适合描述变量间的关系。" },
+                { name: "least-squares regression model (LSRL)（最小二乘回归模型）", desc: "使残差平方和最小的回归直线，是最常用的线性回归模型。" },
+                { name: "mean point (x̄,ȳ) on LSRL（LSRL上的均值点）", desc: "回归直线一定经过点(x̄,ȳ)，即解释变量均值和响应变量均值组成的点。" },
+                { name: "interpret coefficient of determination（解释决定系数）", desc: "决定系数R²表示响应变量的变异中可由解释变量通过线性关系解释的比例，取值范围为[0,1]。" },
+                { name: "high-leverage points（高杠杆点）", desc: "解释变量值远离其均值的点，可能对回归直线产生较大影响。" },
+                { name: "outlier in linear regression（线性回归中的异常值）", desc: "残差较大的点，即观测值与模型预测值差异较大的点。" },
+                { name: "influential（有影响力的）", desc: "如果移除某个点会显著改变回归模型（如斜率、截距），则该点是有影响力的点。" },
+                { name: "write down LSRL based on computer output（根据计算机输出写出LSRL）", desc: "从统计软件输出中提取斜率和截距，写出回归方程ŷ = a + bx。" },
+                { name: "transformations（变换）", desc: "对变量进行数学变换（如对数、平方根变换），使非线性关系转化为线性关系，以便使用线性回归模型。" },
+                { name: "increased randomness in residual plots（残差图中增加的随机性）", desc: "变量变换后，残差图更接近随机分布，表明变换后的模型更合适。" }
             ],
             3: [
-                { name: "Random Phenomenon（随机现象）", desc: "在个别试验中结果不确定，但在大量重复试验中结果呈现出规律性的现象。例如：抛硬币的结果是随机现象。" },
-                { name: "Outcome（结果）", desc: "随机现象的每一个可能的基本结果。例如：抛一枚骰子，可能的结果是1、2、3、4、5、6。" },
-                { name: "Sample Space (S)（样本空间）", desc: "一个随机试验中所有可能结果的集合，通常用S表示。例如：抛一枚硬币的样本空间是S = {正面, 反面}。" },
-                { name: "Event（事件）", desc: "样本空间的一个子集，即某些结果的集合。例如：抛骰子得到偶数的事件是{2, 4, 6}。" },
-                { name: "Probability（概率）", desc: "衡量一个事件发生可能性大小的数值，取值范围为[0,1]，概率为0表示不可能发生，概率为1表示必然发生。" },
-                { name: "Law of Large Numbers（大数定律）", desc: "随着试验次数的增加，事件发生的频率会越来越接近其真实概率。例如：抛硬币次数越多，正面朝上的频率越接近0.5。" },
-                { name: "Simulation（模拟）", desc: "通过计算机或随机设备重复模拟随机现象的过程，用于估计事件的概率或研究随机现象的规律，尤其适用于难以用理论计算的情况。" },
-                { name: "Basic Probability Rules（基本概率法则）", desc: "包括：1. 任何事件的概率在0到1之间；2. 必然事件的概率为1；3. 不可能事件的概率为0；4. 互斥事件的加法法则等。" },
-                { name: "Complement of an Event（事件的补集）", desc: "样本空间中不属于该事件的所有结果组成的事件，记为A^c或Ā，P(A) + P(A^c) = 1。" },
-                { name: "Mutually Exclusive Events（互斥事件）", desc: "不能同时发生的两个事件，即它们的交集为空集，P(A ∩ B) = 0，此时P(A ∪ B) = P(A) + P(B)。" },
-                { name: "Addition Rule for Probability（概率加法法则）", desc: "对于任意两个事件A和B，P(A ∪ B) = P(A) + P(B) - P(A ∩ B)；对于互斥事件，简化为P(A ∪ B) = P(A) + P(B)。" },
-                { name: "Independent Events（独立事件）", desc: "一个事件的发生不影响另一个事件发生的概率的两个事件，满足P(A ∩ B) = P(A) × P(B)。" },
-                { name: "Dependent Events（相依事件）", desc: "一个事件的发生会影响另一个事件发生的概率的两个事件，不满足独立性条件，即P(A ∩ B) ≠ P(A) × P(B)。" },
-                { name: "Conditional Probability（条件概率）", desc: "在已知一个事件B发生的条件下，另一个事件A发生的概率，记为P(A|B)，计算公式：P(A|B) = P(A ∩ B) / P(B)，其中P(B) > 0。" },
-                { name: "General Multiplication Rule（一般乘法法则）", desc: "对于任意两个事件A和B，P(A ∩ B) = P(A|B) × P(B) = P(B|A) × P(A)。" },
-                { name: "Tree Diagram（树状图）", desc: "用于表示多步随机过程中所有可能结果及其概率的图形，每个分支代表一个可能的结果，分支上标注相应的概率，适用于计算复合事件的概率。" },
-                { name: "Venn Diagram（维恩图）", desc: "用圆圈表示事件的图形，圆圈的大小和位置表示事件的概率和关系（如交集、并集、补集），有助于直观理解概率关系。" },
-                { name: "Two-Way Table（双向表）", desc: "用于展示两个分类变量数据分布的表格，行表示一个变量的类别，列表示另一个变量的类别，单元格中的数值为相应组合的频数，可用于计算条件概率和判断独立性。" },
-                { name: "Joint Probability（联合概率）", desc: "两个事件同时发生的概率，即P(A ∩ B)，在双向表中对应于某个单元格的频数除以总频数。" },
-                { name: "Marginal Probability（边缘概率）", desc: "仅涉及一个变量的概率，通过双向表中边缘合计（行合计或列合计）除以总频数得到，如P(A)或P(B)。" },
-                { name: "Conditional Distribution（条件分布）", desc: "在给定某个条件下（如某个事件发生或某个变量取特定值），另一个变量的概率分布，通过固定行或列计算相对频率得到。" },
-                { name: "Independence in Two-Way Tables（双向表中的独立性）", desc: "若对于双向表中的所有单元格，都有P(A ∩ B) = P(A) × P(B)，则两个分类变量独立；即条件分布与边缘分布一致。" }
+                { name: "population（总体）", desc: "研究中所有感兴趣的个体的集合。" },
+                { name: "sample（样本）", desc: "从总体中选取的一部分个体，用于代表总体进行研究。" },
+                { name: "observational（观察性的）", desc: "指观察性研究，研究者不干预变量，仅观察和记录数据。" },
+                { name: "treatments（处理）", desc: "实验中施加给实验单元的条件或干预，用于观察其对响应变量的影响。" },
+                { name: "retrospective（回顾性的）", desc: "指回顾性研究，通过回顾过去的数据来探索变量间的关系。" },
+                { name: "prospective（前瞻性的）", desc: "指前瞻性研究，追踪研究对象在未来一段时间内的情况，收集数据。" },
+                { name: "sample survey（抽样调查）", desc: "通过对样本的调查来获取关于总体信息的方法。" },
+                { name: "experimental units（实验单元）", desc: "实验中接受处理的对象，可以是个体、物品等。" },
+                { name: "generalizations（推广）", desc: "将样本研究结果推广到更大总体的过程，要求样本具有代表性。" },
+                { name: "representative（有代表性的）", desc: "指样本的特征与总体的特征相似，能够反映总体的情况。" },
+                { name: "randomly selected（随机选择的）", desc: "采用随机方法选取样本，使每个个体都有被选中的机会，提高样本代表性。" },
+                { name: "causal relationship（因果关系）", desc: "一个变量的变化直接导致另一个变量变化的关系，通常需要通过实验来确定。" },
+                { name: "sampling without replacement（不放回抽样）", desc: "从总体中抽取一个个体后，不再将其放回总体，因此每个个体最多被选中一次。" },
+                { name: "simple random sample（简单随机样本）", desc: "使总体中所有可能的样本都有相等的被选中概率的抽样方法。" },
+                { name: "stratified random sample（分层随机样本）", desc: "将总体分为若干层，从每层中随机抽样，适用于总体内部差异较大的情况。" },
+                { name: "homogeneous grouping（同质分组）", desc: "将具有相似特征的个体分为一组，如分层抽样中的层内个体具有同质性。" },
+                { name: "cluster sample（整群样本）", desc: "将总体分为若干群，随机选取部分群，并对选中群中的所有个体进行调查。" },
+                { name: "heterogeneity（异质性）", desc: "指群体内部存在较大差异，整群抽样适用于群内异质性高而群间同质性高的情况。" },
+                { name: "systematic random sample（系统随机样本）", desc: "将总体按某种顺序排列，随机选择起始点，然后按固定间隔选取个体组成样本。" },
+                { name: "census（普查）", desc: "对总体中的每一个个体都进行调查的方法，能获得总体的准确信息，但成本高。" },
+                { name: "bias（偏差）", desc: "研究设计或实施过程中存在的系统性误差，导致结果偏离真实情况。" },
+                { name: "voluntary response bias（自愿回应偏差）", desc: "样本由自愿参与的个体组成时产生的偏差，自愿参与者可能与总体存在差异。" },
+                { name: "under-coverage bias（覆盖不足偏差）", desc: "由于抽样框架未能包含总体中的某些部分，导致这些部分未被纳入样本而产生的偏差。" },
+                { name: "non-response bias（无回应偏差）", desc: "部分被选中的个体未能参与调查，且无回应者与回应者存在差异而产生的偏差。" },
+                { name: "question wording bias（问题措辞偏差）", desc: "由于问题表述方式不当，引导受访者给出特定答案而产生的偏差。" },
+                { name: "self-reported responses（自我报告回应）", desc: "由受访者自行报告的信息，可能存在记忆错误或故意歪曲的情况。" },
+                { name: "non-random（非随机的）", desc: "指非随机抽样方法，样本选取不遵循随机原则，可能导致偏差。" },
+                { name: "convenience sampling（便利抽样）", desc: "选取容易接触到的个体作为样本的非随机抽样方法，样本代表性差。" },
+                { name: "factor（因子）", desc: "实验中可能影响结果的变量，研究者通常会操纵因子的不同水平。" },
+                { name: "confounding variable（混杂变量）", desc: "与解释变量和响应变量都相关的变量，可能干扰对因果关系的判断。" },
+                { name: "four principles of good experimental design（良好实验设计的四原则）", desc: "包括对比、随机分配、重复和控制，以确保实验结果的可靠性和有效性。" },
+                { name: "comparisons of at least two treatments（至少两种处理的比较）", desc: "实验中需要比较不同处理的效果，通常包括处理组和对照组。" },
+                { name: "random assignment / allocation（随机分配）", desc: "将实验单元随机分配到不同处理组，确保各组在实验开始时具有可比性。" },
+                { name: "replication in experimental units（实验单元的重复）", desc: "每个处理组包含多个实验单元，以提高实验结果的可靠性。" },
+                { name: "control of potential confounding variables（对潜在混杂变量的控制）", desc: "通过实验设计减少或消除混杂变量对结果的影响。" },
+                { name: "completely randomized design（完全随机设计）", desc: "将所有实验单元随机分配到不同处理组的实验设计。" },
+                { name: "balance the effects of confounding variables（平衡混杂变量的影响）", desc: "通过随机分配等方法，使混杂变量在不同处理组中的影响大致平衡。" },
+                { name: "single-blind experiment（单盲实验）", desc: "参与者不知道自己接受的是何种处理，但研究者知道的实验设计。" },
+                { name: "double-blind experiment（双盲实验）", desc: "参与者和研究者都不知道谁接受了何种处理的实验设计，能有效减少偏见。" },
+                { name: "control group（对照组）", desc: "不接受处理或接受安慰剂处理的组，用于与处理组进行比较。" },
+                { name: "placebo（安慰剂）", desc: "看起来与实际处理相似但没有实际效果的物质或处理，用于对照实验。" },
+                { name: "randomized complete block designs（随机完全区组设计）", desc: "将实验单元分为区组，在每个区组内随机分配处理，以控制区组变量的影响。" },
+                { name: "matched pairs design（配对设计）", desc: "将相似的实验单元配对，每对中的两个单元分别接受两种处理，以减少个体差异的影响。" },
+                { name: "statistical inference（统计推断）", desc: "根据样本数据推断总体特征的过程，包括参数估计和假设检验。" },
+                { name: "statistically significant（统计显著的）", desc: "指观察到的差异不太可能是由随机因素引起的，通常通过假设检验来判断。" }
             ],
             4: [
-                { name: "Random Variable（随机变量）", desc: "将随机试验的结果映射为数值的变量，用大写字母表示（如X、Y），分为离散型随机变量和连续型随机变量。" },
-                { name: "Discrete Random Variable（离散随机变量）", desc: "取值为有限个或可数无穷多个的随机变量，通常是计数结果。例如：抛硬币正面朝上的次数、一家商店每天的顾客数等。" },
-                { name: "Continuous Random Variable（连续随机变量）", desc: "可以在一个区间内取任何值的随机变量，通常是测量结果。例如：一个人的身高、一件产品的寿命等。" },
-                { name: "Probability Distribution of a Discrete Random Variable（离散随机变量的概率分布）", desc: "描述离散随机变量所有可能取值及其对应概率的集合，通常用表格、公式或图形表示，满足所有概率之和为1。" },
-                { name: "Probability Histogram（概率直方图）", desc: "用于展示离散随机变量概率分布的图形，横轴为随机变量的可能取值，纵轴为相应的概率，每个取值用一个矩形条表示。" },
-                { name: "Expected Value (Mean) of a Discrete Random Variable（离散随机变量的期望值/均值）", desc: "衡量离散随机变量中心趋势的指标，计算公式：E(X) = μₓ = Σ[x × P(X = x)]，即所有可能取值与其概率的加权平均。" },
-                { name: "Variance of a Discrete Random Variable（离散随机变量的方差）", desc: "衡量离散随机变量取值分散程度的指标，计算公式：Var(X) = σₓ² = Σ[(x - μₓ)² × P(X = x)] = E(X²) - [E(X)]²。" },
-                { name: "Standard Deviation of a Discrete Random Variable（离散随机变量的标准差）", desc: "方差的平方根，与随机变量具有相同的单位，计算公式：σₓ = √Var(X)。" },
-                { name: "Law of Large Numbers for Expected Value（期望值的大数定律）", desc: "随着试验次数的增加，随机变量的样本均值会越来越接近其期望值μₓ。" },
-                { name: "Linear Transformation of a Random Variable（随机变量的线性变换）", desc: "对于随机变量X和常数a、b，新的随机变量Y = aX + b称为X的线性变换，其均值和方差满足：μᵧ = aμₓ + b，σᵧ² = a²σₓ²，σᵧ = |a|σₓ。" },
-                { name: "Adding/Subtracting Random Variables（随机变量的加减）", desc: "对于两个随机变量X和Y，新的随机变量Z = X + Y（或Z = X - Y）的均值满足：μ_z = μₓ + μᵧ（或μ_z = μₓ - μᵧ）；若X和Y独立，方差满足：σ_z² = σₓ² + σᵧ²（减法时方差也相加）。" },
-                { name: "Independent Random Variables（独立随机变量）", desc: "两个随机变量的取值互不影响，即对于所有可能的x和y，都有P(X = x, Y = y) = P(X = x) × P(Y = y)。" },
-                { name: "Binomial Setting（二项分布场景）", desc: "满足以下条件的随机试验：1. 固定次数n的独立试验；2. 每次试验只有两种可能结果（成功或失败）；3. 每次试验成功的概率p相同；4. 关注的是n次试验中成功的次数X。" },
-                { name: "Binomial Random Variable（二项随机变量）", desc: "在二项分布场景中，n次试验中成功的次数X，记为X ~ B(n, p)，其中n为试验次数，p为每次试验成功的概率。" },
-                { name: "Binomial Probability Formula（二项概率公式）", desc: "二项随机变量X取k值的概率：P(X = k) = C(n, k) × pᵏ × (1-p)ⁿ⁻ᵏ，其中C(n, k)为组合数，表示从n次试验中选择k次成功的方式数。" },
-                { name: "Mean of a Binomial Random Variable（二项随机变量的均值）", desc: "计算公式：μₓ = np，其中n为试验次数，p为每次试验成功的概率。" },
-                { name: "Variance and Standard Deviation of a Binomial Random Variable（二项随机变量的方差和标准差）", desc: "方差：σₓ² = np(1-p)；标准差：σₓ = √[np(1-p)]。" },
-                { name: "Geometric Setting（几何分布场景）", desc: "满足以下条件的随机试验：1. 独立试验；2. 每次试验只有两种可能结果（成功或失败）；3. 每次试验成功的概率p相同；4. 关注的是直到第一次成功为止所进行的试验次数X。" },
-                { name: "Geometric Random Variable（几何随机变量）", desc: "在几何分布场景中，直到第一次成功为止所进行的试验次数X，记为X ~ Geom(p)，其中p为每次试验成功的概率。" },
-                { name: "Geometric Probability Formula（几何概率公式）", desc: "几何随机变量X取k值的概率：P(X = k) = (1-p)ᵏ⁻¹ × p，其中k = 1, 2, 3, ...，表示前k-1次失败，第k次成功。" },
-                { name: "Mean of a Geometric Random Variable（几何随机变量的均值）", desc: "计算公式：μₓ = 1/p，即直到第一次成功平均需要1/p次试验。" },
-                { name: "Variance and Standard Deviation of a Geometric Random Variable（几何随机变量的方差和标准差）", desc: "方差：σₓ² = (1-p)/p²；标准差：σₓ = √[(1-p)/p²] = √(1-p)/p。" },
-                { name: "Probability Distribution of a Continuous Random Variable（连续随机变量的概率分布）", desc: "用概率密度函数（pdf）描述，函数图像与横轴之间的面积表示概率，具有以下性质：1. 密度函数非负；2. 总面积为1；3. 单点概率为0，P(X = a) = 0。" },
-                { name: "Normal Distribution（正态分布）", desc: "一种常见的连续概率分布，其概率密度函数呈钟形，对称于均值μ，由均值μ和标准差σ完全确定，记为X ~ N(μ, σ²)。" },
-                { name: "Standard Normal Distribution（标准正态分布）", desc: "均值μ = 0，标准差σ = 1的正态分布，记为Z ~ N(0, 1)，任何正态分布都可以通过标准化转换为标准正态分布。" },
-                { name: "Z-score（Z分数）", desc: "将正态随机变量标准化的转换：Z = (X - μ)/σ，Z表示X距离均值μ有多少个标准差，服从标准正态分布。" },
-                { name: "Empirical Rule for Normal Distribution（正态分布的经验法则）", desc: "对于X ~ N(μ, σ²)：约68%的数据在μ ± σ范围内；约95%在μ ± 2σ范围内；约99.7%在μ ± 3σ范围内。" },
-                { name: "Normal Probability Plot（正态概率图）", desc: "用于判断数据是否近似服从正态分布的图形，将数据值与标准正态分布的分位数对应绘制，若点大致落在一条直线上，则数据近似正态分布。" }
+                { name: "random and non-random（随机的和非随机的）", desc: "随机指结果不确定但有规律性，非随机指结果确定或无规律。" },
+                { name: "simulation（模拟）", desc: "通过计算机或随机设备重复模拟随机现象，用于估计概率或研究其规律。" },
+                { name: "trial of a simulation（模拟试验）", desc: "模拟过程中的一次重复，对应随机现象的一次观测。" },
+                { name: "outcome of trial（试验结果）", desc: "每次模拟试验得到的结果。" },
+                { name: "law of large numbers（大数定律）", desc: "随着试验次数增加，事件发生的频率会越来越接近其真实概率。" },
+                { name: "sample space（样本空间）", desc: "随机试验中所有可能结果的集合，通常用S表示。" },
+                { name: "equally likely event（等可能事件）", desc: "在样本空间中，每个结果发生的概率相等的事件。" },
+                { name: "probability of an event（事件的概率）", desc: "衡量事件发生可能性大小的数值，取值范围为[0,1]。" },
+                { name: "complement of an event（事件的补集）", desc: "样本空间中不属于该事件的所有结果组成的事件，记为A^c，P(A) + P(A^c) = 1。" },
+                { name: "probability and relative frequency（概率与相对频率）", desc: "概率是理论上的可能性，相对频率是实际观测中的比例，大数定律表明两者会趋于一致。" },
+                { name: "mutually exclusive event（互斥事件）", desc: "不能同时发生的事件，即它们的交集为空集，P(A ∩ B) = 0。" },
+                { name: "joint probability / intersection（联合概率/交集）", desc: "两个事件同时发生的概率，记为P(A ∩ B)。" },
+                { name: "conditional probability（条件概率）", desc: "在已知事件B发生的条件下，事件A发生的概率，记为P(A|B) = P(A ∩ B) / P(B)。" },
+                { name: "multiplication rule（乘法法则）", desc: "计算联合概率的法则：P(A ∩ B) = P(A|B) × P(B) = P(B|A) × P(A)。" },
+                { name: "independent event（独立事件）", desc: "一个事件的发生不影响另一个事件发生的概率，满足P(A ∩ B) = P(A) × P(B)。" },
+                { name: "union event（并集事件）", desc: "事件A或事件B发生的事件，记为A ∪ B。" },
+                { name: "addition rule（加法法则）", desc: "计算并集概率的法则：P(A ∪ B) = P(A) + P(B) - P(A ∩ B)。" },
+                { name: "interpretation of probability（概率的解释）", desc: "概率表示事件发生的长期相对频率，或对事件发生可能性的主观信念。" },
+                { name: "probability distribution（概率分布）", desc: "描述随机变量所有可能取值及其对应概率的集合。" },
+                { name: "discrete random variable（离散随机变量）", desc: "只能取有限个或可数无限个值的随机变量，如计数结果。" },
+                { name: "properties of probability（概率的性质）", desc: "包括：概率在0到1之间；所有可能结果的概率和为1等。" },
+                { name: "cumulative probability distribution（累积概率分布）", desc: "描述随机变量取值小于或等于某个值的概率的函数。" },
+                { name: "describing probability distribution (S,U,V,C for population)（描述概率分布）", desc: "S（Shape，形状）、U（Unusual features，异常特征）、V（Variability，离散性）、C（Center，中心），用于描述总体的概率分布。" },
+                { name: "parameter of population（总体参数）", desc: "描述总体概率分布特征的数值，如总体均值、总体标准差等。" },
+                { name: "statistic of sample（样本统计量）", desc: "根据样本数据计算的描述样本特征的数值，用于估计总体参数。" },
+                { name: "mean of discrete random variable（离散随机变量的均值）", desc: "即数学期望，是随机变量所有可能取值与其对应概率的乘积之和，反映随机变量的平均水平。" },
+                { name: "standard deviation of discrete random variable（离散随机变量的标准差）", desc: "衡量离散随机变量取值分散程度的指标，是方差的平方根。" },
+                { name: "interpretation of parameter of discrete random variable（离散随机变量参数的解释）", desc: "如均值表示长期重复试验中随机变量的平均结果，标准差表示结果的平均变异程度。" },
+                { name: "linear combination of random variables aZ + bY（随机变量的线性组合aZ + bY）", desc: "由两个随机变量Z和Y通过线性运算得到的新随机变量。" },
+                { name: "independent random variable（独立随机变量）", desc: "一个随机变量的取值不影响另一个随机变量的取值概率的两个随机变量。" },
+                { name: "mean of the linear combination（线性组合的均值）", desc: "对于线性组合aX + bY，其均值为aμₓ + bμᵧ。" },
+                { name: "standard deviation of linear combination（线性组合的标准差）", desc: "对于独立随机变量X和Y，线性组合aX + bY的标准差为√(a²σₓ² + b²σᵧ²)。" },
+                { name: "effects of probability distribution Y = a + bX（概率分布Y = a + bX的影响）", desc: "a为常数项，使分布平移；b为系数，使分布伸缩，均值变为a + bμₓ，标准差变为|b|σₓ。" },
+                { name: "binomial setting（二项分布场景）", desc: "满足以下条件的场景：n次独立试验；每次试验只有两种结果（成功或失败）；每次试验成功概率p相同。" },
+                { name: "binomial random variable（二项随机变量）", desc: "在二项分布场景中，n次试验中成功的次数，记为X ~ B(n, p)。" },
+                { name: "probability of binomial random variable (Bpd)（二项随机变量的概率）", desc: "二项分布的概率密度函数，计算恰好k次成功的概率：P(X=k) = C(n,k)pᵏ(1-p)ⁿ⁻ᵏ。" },
+                { name: "probability of cumulative binomial random variable (Bcd)（二项随机变量的累积概率）", desc: "二项分布的累积分布函数，计算至多k次成功的概率：P(X≤k) = Σᵢ₌₀ᵏ C(n,i)pⁱ(1-p)ⁿ⁻ⁱ。" },
+                { name: "expected value / mean of binomial random variable（二项随机变量的期望/均值）", desc: "μ = np，即n次试验中预期的成功次数。" },
+                { name: "standard deviation of binomial random variable（二项随机变量的标准差）", desc: "σ = √[np(1-p)]，衡量成功次数的变异程度。" },
+                { name: "geometric setting（几何分布场景）", desc: "满足以下条件的场景：一系列独立试验；每次试验只有两种结果（成功或失败）；每次试验成功概率p相同；关注首次成功时的试验次数。" },
+                { name: "geometric random variable（几何随机变量）", desc: "在几何分布场景中，首次成功前的试验次数，记为X ~ G(p)。" },
+                { name: "probability of geometric random variable (Gpd)（几何随机变量的概率）", desc: "几何分布的概率密度函数，计算首次成功发生在第k次试验的概率：P(X=k) = (1-p)ᵏ⁻¹p。" },
+                { name: "probability of cumulative geometric random variable (Gcd)（几何随机变量的累积概率）", desc: "几何分布的累积分布函数，计算首次成功发生在第k次或更早试验的概率：P(X≤k) = 1 - (1-p)ᵏ。" },
+                { name: "expected value of geometric random variable（几何随机变量的期望）", desc: "μ = 1/p，即首次成功前预期的试验次数。" },
+                { name: "standard deviation of geometric random variable（几何随机变量的标准差）", desc: "σ = √[(1-p)/p²]，衡量首次成功前试验次数的变异程度。" },
+                { name: "interpretation of geometric / binomial parameters（几何/二项分布参数的解释）", desc: "如二项分布中的p表示每次试验成功的概率，几何分布中的p表示每次试验成功的概率，1/p表示首次成功的平均试验次数。" }
             ]
         };
 
-        // 全局变量
+           // 全局变量
         let selectedUnits = [1, 2, 3, 4]; // 默认选中所有单元
         let drawnConcepts = []; // 已抽取的概念记录
-        let selectedSeconds = 60; // 默认倒计时时间（秒）- 1分钟
-        let countdownInterval; // 倒计时计时器
-
-        // DOM元素
-        const randomBtn = document.getElementById('randomBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const conceptCard = document.getElementById('conceptCard');
-        const initialHint = document.getElementById('initialHint');
-        const conceptUnit = document.getElementById('conceptUnit');
-        const conceptName = document.getElementById('conceptName');
-        const conceptDesc = document.getElementById('conceptDesc');
-        const conceptCount = document.getElementById('conceptCount');
-        const historyList = document.getElementById('historyList');
-        const selectAllBtn = document.getElementById('selectAll');
-        const deselectAllBtn = document.getElementById('deselectAll');
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const timerOptions = document.querySelectorAll('.timer-option');
-        const timerContainer = document.getElementById('timerContainer');
-        const explanationContainer = document.getElementById('explanationContainer');
-        const countdownDisplay = document.getElementById('countdown');
-        const timerBar = document.getElementById('timerBar');
-        const showNowBtn = document.getElementById('showNowBtn');
-
-        // 更新选中的单元
-        function updateSelectedUnits() {
-            selectedUnits = [];
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    selectedUnits.push(parseInt(checkbox.value));
-                }
-            });
-        }
-
-        // 设置倒计时时间
-        timerOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                // 播放点击音效
-                playSound(clickSound);
-                
-                // 更新选中状态
-                timerOptions.forEach(opt => {
-                    opt.classList.remove('timer-btn-active');
-                    opt.classList.add('timer-btn-inactive');
-                });
-                option.classList.remove('timer-btn-inactive');
-                option.classList.add('timer-btn-active');
-                
-                // 保存选中的秒数
-                selectedSeconds = parseInt(option.dataset.seconds);
-            });
-        });
-
-        // 开始倒计时
-        function startCountdown() {
-            // 如果选择直接显示，则不启动倒计时
-            if (selectedSeconds === 0) {
-                showExplanation();
-                return;
-            }
-            
-            // 清除可能存在的计时器
-            clearInterval(countdownInterval);
-            
-            // 显示计时器，隐藏解释
-            timerContainer.classList.remove('hidden');
-            explanationContainer.classList.add('hidden');
-            
-            let secondsLeft = selectedSeconds;
-            updateCountdownDisplay(secondsLeft);
-            
-            // 设置计时器
-            countdownInterval = setInterval(() => {
-                secondsLeft--;
-                updateCountdownDisplay(secondsLeft);
-                
-                if (secondsLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    // 播放计时结束音效
-                    playSound(timerEndSound);
-                    showExplanation();
-                }
-            }, 1000);
-        }
-
-        // 更新倒计时显示
-        function updateCountdownDisplay(seconds) {
-            // 格式化时间显示（MM:SS）
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            countdownDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            
-            // 更新进度条
-            const percentage = (seconds / selectedSeconds) * 100;
-            timerBar.style.width = `${percentage}%`;
-            
-            // 进度条颜色变化（从绿色到红色）
-            if (percentage > 50) {
-                timerBar.classList.remove('bg-yellow-500', 'bg-red-500');
-                timerBar.classList.add('bg-green-500');
-            } else if (percentage > 20) {
-                timerBar.classList.remove('bg-green-500', 'bg-red-500');
-                timerBar.classList.add('bg-yellow-500');
-            } else {
-                timerBar.classList.remove('bg-green-500', 'bg-yellow-500');
-                timerBar.classList.add('bg-red-500');
-            }
-        }
-
-        // 显示解释
-        function showExplanation() {
-            timerContainer.classList.add('hidden');
-            explanationContainer.classList.remove('hidden');
-        }
-
-        // 随机抽取概念
-        function drawRandomConcept() {
-            updateSelectedUnits();
-            
-            if (selectedUnits.length === 0) {
-                alert('请至少选择一个单元');
-                return;
-            }
-
-            // 收集所有可选概念
-            let availableConcepts = [];
-            selectedUnits.forEach(unit => {
-                statsConcepts[unit].forEach(concept => {
-                    // 检查是否已抽取（避免重复）
-                    const isDrawn = drawnConcepts.some(c => 
-                        c.unit === unit && c.name === concept.name
-                    );
-                    if (!isDrawn) {
-                        availableConcepts.push({...concept, unit});
-                    }
-                });
-            });
-
-            // 如果所有概念都已抽取，则重置
-            if (availableConcepts.length === 0) {
-                drawnConcepts = [];
-                selectedUnits.forEach(unit => {
-                    statsConcepts[unit].forEach(concept => {
-                        availableConcepts.push({...concept, unit});
-                    });
-                });
-            }
-
-            // 随机选择一个概念
-            const randomIndex = Math.floor(Math.random() * availableConcepts.length);
-            const selectedConcept = availableConcepts[randomIndex];
-            
-            // 播放抽取音效
-            playSound(drawSound);
-            
-            // 显示概念
-            displayConcept(selectedConcept);
-            
-            // 添加到历史记录
-            addToHistory(selectedConcept);
-            
-            // 更新计数
-            drawnConcepts.push(selectedConcept);
-            updateCount();
-            
-            // 开始倒计时
-            startCountdown();
-        }
-
-        // 显示概念
-        function displayConcept(concept) {
-            // 显示卡片，隐藏初始提示
-            conceptCard.classList.remove('hidden');
-            initialHint.classList.add('hidden');
-            
-            // 更新内容
-            const unitClass = `unit${concept.unit}`;
-            const unitNames = {
-                1: "单元1：探索数据",
-                2: "单元2：实验设计",
-                3: "单元3：概率基础",
-                4: "单元4：概率分布"
-            };
-            
-            conceptUnit.textContent = unitNames[concept.unit];
-            conceptUnit.className = `text-sm font-bold px-3 py-1 rounded-full inline-block mb-3 bg-${unitClass}/10 text-${unitClass}`;
-            conceptName.textContent = concept.name;
-            conceptDesc.textContent = concept.desc;
-            
-            // 添加动画效果
-            conceptCard.classList.remove('animate-pop');
-            void conceptCard.offsetWidth; // 重置动画
-            conceptCard.classList.add('animate-pop');
-        }
-
-        // 添加到历史记录
-        function addToHistory(concept) {
-            const historyItem = document.createElement('div');
-            const unitClass = `unit${concept.unit}`;
-            
-            historyItem.className = `bg-gray-50 rounded-lg p-3 border-l-4 border-${unitClass} card-hover`;
-            historyItem.innerHTML = `
-                <div class="text-xs font-bold text-${unitClass} mb-1">${concept.unit}单元</div>
-                <div class="font-medium">${concept.name}</div>
-            `;
-            
-            // 点击历史记录项可重新查看该概念
-            historyItem.addEventListener('click', () => {
-                playSound(clickSound);
-                displayConcept(concept);
-                // 直接显示解释，不启动倒计时
-                timerContainer.classList.add('hidden');
-                explanationContainer.classList.remove('hidden');
-            });
-            
-            // 添加到历史列表开头
-            if (historyList.querySelector('.text-gray-500')) {
-                historyList.innerHTML = '';
-            }
-            historyList.prepend(historyItem);
-        }
-
-        // 更新计数
-        function updateCount() {
-            // 计算总可选概念数
-            let totalConcepts = 0;
-            selectedUnits.forEach(unit => {
-                totalConcepts += statsConcepts[unit].length;
-            });
-            
-            conceptCount.textContent = `已抽取：${drawnConcepts.length}/${totalConcepts}`;
-        }
-
-        // 全选
-        selectAllBtn.addEventListener('click', () => {
-            playSound(clickSound);
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-            updateSelectedUnits();
-        });
-
-        // 全不选
-        deselectAllBtn.addEventListener('click', () => {
-            playSound(clickSound);
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            updateSelectedUnits();
-        });
-
-        // 立即查看按钮
-        showNowBtn.addEventListener('click', () => {
-            playSound(clickSound);
-            clearInterval(countdownInterval);
-            showExplanation();
-        });
-
-        // 事件监听
-        randomBtn.addEventListener('click', drawRandomConcept);
-        nextBtn.addEventListener('click', drawRandomConcept);
+        let currentTimer = null; // 当前计时器
+        let selectedTime = 60; // 默认60秒后显示解释
         
-        // 为复选框添加音效
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const randomBtn = document.getElementById('randomBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const selectAllBtn = document.getElementById('selectAll');
+            const deselectAllBtn = document.getElementById('deselectAll');
+            const showNowBtn = document.getElementById('showNowBtn');
+            const timerOptions = document.querySelectorAll('.timer-option');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            // 随机抽取按钮点击事件
+            randomBtn.addEventListener('click', drawRandomConcept);
+            nextBtn.addEventListener('click', drawRandomConcept);
+            
+            // 全选/全不选按钮
+            selectAllBtn.addEventListener('click', function() {
                 playSound(clickSound);
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
                 updateSelectedUnits();
             });
+            
+            deselectAllBtn.addEventListener('click', function() {
+                playSound(clickSound);
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedUnits();
+            });
+            
+            // 单元选择变化事件
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    playSound(clickSound);
+                    updateSelectedUnits();
+                });
+            });
+            
+            // 计时器选项点击事件
+            timerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    playSound(clickSound);
+                    timerOptions.forEach(opt => opt.classList.remove('timer-btn-active', 'timer-btn-inactive'));
+                    timerOptions.forEach(opt => opt.classList.add('timer-btn-inactive'));
+                    this.classList.remove('timer-btn-inactive');
+                    this.classList.add('timer-btn-active');
+                    selectedTime = parseInt(this.dataset.seconds);
+                });
+            });
+            
+            // 立即查看按钮点击事件
+            showNowBtn.addEventListener('click', function() {
+                playSound(clickSound);
+                if (currentTimer) {
+                    clearInterval(currentTimer);
+                }
+                showExplanation();
+            });
+            
+            // 更新选中的单元
+            function updateSelectedUnits() {
+                selectedUnits = [];
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedUnits.push(parseInt(checkbox.value));
+                    }
+                });
+            }
+            
+            // 随机抽取概念
+            function drawRandomConcept() {
+                // 检查是否有选中的单元
+                if (selectedUnits.length === 0) {
+                    alert('请至少选择一个单元');
+                    return;
+                }
+                
+                playSound(drawSound);
+                
+                // 收集所有选中单元的概念
+                let availableConcepts = [];
+                selectedUnits.forEach(unit => {
+                    statsConcepts[unit].forEach(concept => {
+                        availableConcepts.push({
+                            unit: unit,
+                            name: concept.name,
+                            desc: concept.desc
+                        });
+                    });
+                });
+                
+                // 如果所有概念都已抽取，重置已抽取记录
+                if (drawnConcepts.length >= availableConcepts.length) {
+                    drawnConcepts = [];
+                }
+                
+                // 随机选择一个未抽取过的概念
+                let randomConcept;
+                do {
+                    const randomUnitIndex = Math.floor(Math.random() * selectedUnits.length);
+                    const randomUnit = selectedUnits[randomUnitIndex];
+                    const conceptIndex = Math.floor(Math.random() * statsConcepts[randomUnit].length);
+                    randomConcept = {
+                        unit: randomUnit,
+                        name: statsConcepts[randomUnit][conceptIndex].name,
+                        desc: statsConcepts[randomUnit][conceptIndex].desc
+                    };
+                } while (drawnConcepts.some(c => c.unit === randomConcept.unit && c.name === randomConcept.name));
+                
+                // 添加到已抽取记录
+                drawnConcepts.push(randomConcept);
+                
+                // 显示概念卡片，隐藏初始提示
+                document.getElementById('conceptCard').classList.remove('hidden');
+                document.getElementById('initialHint').classList.add('hidden');
+                
+                // 更新概念信息
+                const unitNames = {
+                    1: "单元1：探索单变量数据",
+                    2: "单元2：探索双变量数据",
+                    3: "单元3：收集数据",
+                    4: "单元4：概率与分布"
+                };
+                const unitColors = {
+                    1: "unit1",
+                    2: "unit2",
+                    3: "unit3",
+                    4: "unit4"
+                };
+                
+                const conceptUnitEl = document.getElementById('conceptUnit');
+                conceptUnitEl.textContent = unitNames[randomConcept.unit];
+                conceptUnitEl.className = `text-sm font-bold px-3 py-1 rounded-full inline-block mb-3 bg-${unitColors[randomConcept.unit]}/10 text-${unitColors[randomConcept.unit]}`;
+                
+                document.getElementById('conceptName').textContent = randomConcept.name;
+                document.getElementById('conceptDesc').textContent = randomConcept.desc;
+                
+                // 更新计数
+                document.getElementById('conceptCount').textContent = `已抽取：${drawnConcepts.length}/${getTotalConceptsCount()}`;
+                
+                // 更新历史记录
+                updateHistoryList();
+                
+                // 处理解释显示逻辑
+                const timerContainer = document.getElementById('timerContainer');
+                const explanationContainer = document.getElementById('explanationContainer');
+                
+                // 清除之前的计时器
+                if (currentTimer) {
+                    clearInterval(currentTimer);
+                }
+                
+                // 根据选择的时间决定显示方式
+                if (selectedTime === 0) {
+                    // 直接显示解释
+                    timerContainer.classList.add('hidden');
+                    explanationContainer.classList.remove('hidden');
+                } else {
+                    // 倒计时后显示解释
+                    explanationContainer.classList.add('hidden');
+                    timerContainer.classList.remove('hidden');
+                    
+                    let secondsLeft = selectedTime;
+                    updateTimerDisplay(secondsLeft);
+                    
+                    currentTimer = setInterval(() => {
+                        secondsLeft--;
+                        updateTimerDisplay(secondsLeft);
+                        
+                        if (secondsLeft <= 0) {
+                            clearInterval(currentTimer);
+                            playSound(timerEndSound);
+                            showExplanation();
+                        }
+                    }, 1000);
+                }
+            }
+            
+            // 更新计时器显示
+            function updateTimerDisplay(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('countdown').textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                // 更新进度条
+                const progress = (seconds / selectedTime) * 100;
+                document.getElementById('timerBar').style.width = `${progress}%`;
+            }
+            
+            // 显示解释
+            function showExplanation() {
+                document.getElementById('timerContainer').classList.add('hidden');
+                document.getElementById('explanationContainer').classList.remove('hidden');
+            }
+            
+            // 更新历史记录列表
+            function updateHistoryList() {
+                const historyList = document.getElementById('historyList');
+                historyList.innerHTML = '';
+                
+                if (drawnConcepts.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="text-gray-500 text-center col-span-full py-8">
+                            暂无抽取记录，开始抽取后将显示在这里
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 倒序显示（最新的在前面）
+                const reversedHistory = [...drawnConcepts].reverse();
+                
+                reversedHistory.forEach((concept, index) => {
+                    const unitColors = {
+                        1: "unit1",
+                        2: "unit2",
+                        3: "unit3",
+                        4: "unit4"
+                    };
+                    
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `bg-gray-50 rounded-lg p-3 border-l-4 border-${unitColors[concept.unit]} card-hover`;
+                    historyItem.innerHTML = `
+                        <div class="text-xs font-medium text-${unitColors[concept.unit]} mb-1">单元${concept.unit}</div>
+                        <div class="text-sm font-medium text-gray-800 truncate">${concept.name}</div>
+                        <div class="text-xs text-gray-500 mt-1">第${drawnConcepts.length - index}个</div>
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+            }
+            
+            // 获取选中单元的总概念数
+            function getTotalConceptsCount() {
+                let count = 0;
+                selectedUnits.forEach(unit => {
+                    count += statsConcepts[unit].length;
+                });
+                return count;
+            }
         });
-
-        // 初始化
-        updateCount();
     </script>
 </body>
 </html>
-    
