@@ -16,6 +16,7 @@
                         unit59: '#36CFC9',    // U5-U9 主题色（青色）
                         gpa: '#6B7280',       // GPA计算器色（灰色）
                         doc: '#23B872',       // 文档按钮颜色（绿色）
+                        topic: '#8B5CF6',     // 随机话题按钮色（紫色）
                     },
                     fontFamily: {
                         comic: ['"Comic Sans MS"', 'cursive', 'sans-serif'],
@@ -70,10 +71,10 @@
         <!-- 核心导航按钮区 -->
         <section class="mb-12">
             <h2 class="text-center text-xl font-bold text-gray-700 mb-6">
-                <i class="fa fa-list-ul mr-2"></i>选择抽题单元范围
+                <i class="fa fa-list-ul mr-2"></i>选择功能模块
             </h2>
-            <!-- 响应式按钮布局：移动端垂直排列，桌面端水平排列 -->
-            <div class="flex flex-col sm:flex-row gap-4 max-w-4xl mx-auto">
+            <!-- 响应式按钮布局 -->
+            <div class="flex flex-col sm:flex-row gap-4 max-w-5xl mx-auto">
                 <!-- U1-U4 抽题按钮 -->
                 <a href="Stats Random Question U1 TO U4.html" class="flex-1">
                     <button class="btn-nav bg-unit14 focus:ring-unit14 w-full">
@@ -84,6 +85,12 @@
                 <a href="Stats Random Question U5-U9.html" class="flex-1">
                     <button class="btn-nav bg-unit59 focus:ring-unit59 w-full">
                         <i class="fa fa-random mr-2"></i>Stats Random Question U5-U9
+                    </button>
+                </a>
+                <!-- 随机话题与录音按钮（使用相对路径） -->
+                <a href="randomtopics.html" class="flex-1">
+                    <button class="btn-nav bg-topic focus:ring-topic w-full">
+                        <i class="fa fa-microphone mr-2"></i>随机演讲话题 & Recording
                     </button>
                 </a>
                 <!-- GPA计算器按钮 -->
@@ -138,33 +145,34 @@
         </section>
     </main>
 
-    <!-- 页脚 -->
+    <!-- 页脚（更新导航链接为相对路径） -->
     <footer class="bg-gray-800 text-white py-6 mt-16">
         <div class="container mx-auto px-4 text-center">
             <p class="mb-2">AP统计学随机抽题平台 | 2025</p>
-            <p class="text-sm text-gray-400">导航链接：Stats Random Question U1 TO U4.html | Stats Random Question U5-U9.html | TestJournal.html</p>
+            <p class="text-sm text-gray-400">
+                导航链接：Stats Random Question U1 TO U4.html | Stats Random Question U5-U9.html | 
+                TestJournal.html | <a href="randomtopics.html" class="text-topic hover:underline">随机演讲话题</a>
+            </p>
         </div>
     </footer>
 
-    <!-- 点击音效（增强交互体验） -->
+    <!-- 点击音效 -->
     <audio id="clickSound" preload="auto">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 1. 按钮点击音效逻辑
+        // 按钮点击音效逻辑
         document.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('click', () => {
                 const sound = document.getElementById('clickSound');
-                // 克隆音效元素支持连续点击播放（避免单次点击后需等待音效结束）
                 const soundClone = sound.cloneNode();
                 soundClone.play().catch(err => console.log("音效播放提示：", err));
-                // 播放完成后清理克隆元素，避免内存占用
                 soundClone.addEventListener('ended', () => soundClone.remove());
             });
         });
 
-        // 2. 导航链接hover放大效果
+        // 导航链接hover放大效果
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('mouseenter', () => {
                 const btn = link.querySelector('button');
@@ -178,4 +186,3 @@
     </script>
 </body>
 </html>
-    
