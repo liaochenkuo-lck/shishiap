@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>随机演讲话题生成器 | Random Speech Topic Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#10B981',
+            accent: '#8B5CF6',
+            dark: '#1E293B',
+            light: '#F8FAFC',
+            danger: '#EF4444'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      .modal-enter {
+        animation: modalIn 0.3s ease-in-out;
+      }
+      .pulse {
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes modalIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+    }
+  </style>
+  
+  <!-- 夜间模式样式 -->
+  <style>
+    .dark-mode {
+      --bg-primary: #1a202c;
+      --text-primary: #f7fafc;
+      --card-bg: #2d3748;
+      --border-color: #4a5568;
+      --gray-text: #a0aec0;
+    }
+
+    .dark-mode body {
+      background: var(--bg-primary);
+    }
+
+    .dark-mode .bg-white {
+      background-color: var(--card-bg) !important;
+    }
+
+    .dark-mode .text-dark,
+    .dark-mode .text-gray-800,
+    .dark-mode .text-gray-700 {
+      color: var(--text-primary) !important;
+    }
+
+    .dark-mode .text-gray-600,
+    .dark-mode .text-gray-500 {
+      color: var(--gray-text) !important;
+    }
+
+    .dark-mode .border-gray-100,
+    .dark-mode .border-gray-200 {
+      border-color: var(--border-color) !important;
+    }
+
+    .dark-mode .bg-gray-50 {
+      background-color: var(--border-color) !important;
+    }
+    
+    .dark-mode .bg-blue-100 {
+      background-color: #2563eb33 !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-light to-blue-50 min-h-screen font-sans text-dark transition-colors duration-300">
+  <!-- 导航栏 -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-300">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-random text-primary text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          演讲话题生成器
+        </h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="favorites-btn" class="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full text-sm border border-gray-300 hover:bg-gray-50 transition-colors">
+          <i class="fa fa-heart-o text-gray-600"></i>
+          <span>收藏夹</span>
+          <span id="favorites-count" class="bg-primary/10 text-primary text-xs px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <i class="fa fa-moon-o text-gray-600"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8 md:py-16">
+    <!-- 介绍部分 -->
+    <section class="text-center mb-12 max-w-3xl mx-auto">
+      <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4 text-dark">
+        发现你的下一个演讲灵感
+      </h2>
+      <p class="text-gray-600 mb-6">
+        随机生成涵盖生活各方面的3-5分钟演讲话题，从轻松有趣到深刻哲理，助你找到完美的演讲主题。
+      </p>
+      <div class="text-sm text-gray-500 italic">
+        Discover your next speaking inspiration with topics covering all aspects of life
+      </div>
+    </section>
+
+    <!-- 分类筛选 -->
+    <section class="mb-10">
+      <div class="flex overflow-x-auto pb-2 gap-2 md:justify-center">
+        <button class="category-btn bg-primary text-white px-4 py-2 rounded-full text-sm whitespace-nowrap" data-category="all">
+          全部 / All
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="life">
+          生活趣味 / Life Fun
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="study">
+          学习成长 / Study & Growth
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="work">
+          职场工作 / Career
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="relationship">
+          人际关系 / Relationships
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="self">
+          自我探索 / Self-Exploration
+        </button>
+        <button class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap shadow-sm hover:shadow" data-category="philosophy">
+          认知哲思 / Philosophy
+        </button>
+      </div>
+    </section>
+
+    <!-- 话题卡片 -->
+    <section class="max-w-4xl mx-auto">
+      <div id="topic-card" class="bg-white rounded-2xl shadow-lg p-6 md:p-8 card-hover fade-in">
+        <div id="topic-category" class="inline-block px-3 py-1 bg-blue-100 text-primary text-xs font-medium rounded-full mb-4">
+          生活趣味 / Life Fun
+        </div>
+        
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 flex items-center">
+              <i class="fa fa-comment text-primary mr-2"></i>中文话题
+            </h3>
+            <p id="chinese-topic" class="text-xl md:text-2xl font-bold leading-relaxed">
+              每天花10分钟做一件"无用"的事（比如观察云朵、叠纸船），会带来什么变化？
+            </p>
+          </div>
+          
+          <div class="border-t border-gray-100 pt-6">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 flex items-center">
+              <i class="fa fa-globe text-accent mr-2"></i>English Topic
+            </h3>
+            <p id="english-topic" class="text-xl md:text-2xl font-bold leading-relaxed text-gray-700">
+              What changes would occur if you spent 10 minutes each day doing something "useless" (like watching clouds or folding paper boats)?
+            </p>
+          </div>
+          
+          <!-- 录音控制区 -->
+          <div class="border-t border-gray-100 pt-6">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fa fa-microphone text-danger mr-2"></i>演讲录音
+            </h3>
+            
+            <div id="recording-controls" class="flex flex-wrap gap-4 items-center">
+              <div id="timer-display" class="text-2xl font-bold text-primary">
+                05:00
+              </div>
+              
+              <button id="start-recording" class="flex items-center gap-2 bg-secondary text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+                <i class="fa fa-play"></i>
+                <span>开始录音</span>
+              </button>
+              
+              <button id="stop-recording" class="hidden flex items-center gap-2 bg-danger text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+                <i class="fa fa-stop"></i>
+                <span>停止录音</span>
+              </button>
+              
+              <button id="download-recording" class="hidden flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+                <i class="fa fa-download"></i>
+                <span>下载录音和文本</span>
+              </button>
+            </div>
+            
+            <div id="recording-status" class="mt-3 text-sm text-gray-500 hidden">
+              <i class="fa fa-info-circle"></i>
+              <span>录音中...请对着麦克风演讲</span>
+            </div>
+
+            <!-- 转录文本显示区域 -->
+            <div id="transcription-container" class="mt-6 hidden">
+              <h4 class="text-md font-medium text-gray-700 mb-2 flex items-center">
+                <i class="fa fa-file-text-o text-accent mr-2"></i>语音转录
+              </h4>
+              <div id="transcription" class="p-4 bg-gray-50 rounded-lg min-h-[80px] text-gray-800">
+                <!-- 转录的文字会显示在这里 -->
+                准备就绪，点击开始录音后将自动转录...
+              </div>
+              <div id="transcription-error" class="mt-2 text-sm text-danger hidden">
+                <i class="fa fa-exclamation-circle"></i>
+                <span>转录服务暂时不可用，请检查麦克风权限或稍后重试</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div class="flex gap-3 w-full sm:w-auto">
+            <button id="favorite-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition-colors">
+              <i class="fa fa-heart-o"></i>
+              <span>收藏 / Save</span>
+            </button>
+            <button id="favorites-btn-mobile" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-50 transition-colors md:hidden">
+              <i class="fa fa-bookmark-o"></i>
+              <span>收藏夹</span>
+            </button>
+          </div>
+          
+          <button id="random-btn" class="flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+            <i class="fa fa-refresh"></i>
+            <span>换一个话题 / New Topic</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 操作反馈 -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-dark text-white px-6 py-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 flex items-center gap-2">
+      <i class="fa fa-check-circle"></i>
+      <span>话题已更新 / Topic updated</span>
+    </div>
+  </main>
+
+  <!-- 收藏夹模态框 -->
+  <div id="favorites-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="w-full max-w-4xl max-h-[80vh] bg-white rounded-2xl shadow-xl overflow-hidden modal-enter">
+      <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <i class="fa fa-heart text-red-500"></i>
+          <span>我的收藏夹 / My Favorites</span>
+        </h3>
+        <button id="close-favorites" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <i class="fa fa-times text-gray-600"></i>
+        </button>
+      </div>
+      
+      <div id="favorites-list" class="p-6 overflow-y-auto max-h-[calc(80vh-120px)]">
+        <!-- 收藏的话题列表将在这里动态生成 -->
+        <div id="empty-favorites" class="text-center py-12">
+          <i class="fa fa-bookmark-o text-gray-300 text-5xl mb-4"></i>
+          <p class="text-gray-500">还没有收藏任何话题</p>
+          <p class="text-gray-400 text-sm mt-2">点击话题卡片上的"收藏"按钮添加话题</p>
+        </div>
+      </div>
+      
+      <div class="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+        <button id="clear-favorites" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-full text-sm transition-colors">
+          清空收藏 / Clear All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="bg-white border-t border-gray-200 mt-16">
+    <div class="container mx-auto px-4 py-8 text-center text-gray-500 text-sm">
+      <p>© 2023 演讲话题生成器 | Random Speech Topic Generator</p>
+      <p class="mt-2">为3-5分钟演讲提供灵感 | Inspiring 3-5 minute speeches</p>
+    </div>
+  </footer>
+
+  <script>
+    // 双语话题数据（补充完整）
+  const topics = [
+  // 生活趣味类 (life)
+  {
+    category: "life",
+    chinese: "每天花10分钟做一件“无用”的事（比如观察云朵、叠纸船），会带来什么变化？",
+    english: "What changes would occur if you spent 10 minutes each day doing something \"useless\" (like watching clouds or folding paper boats)?"
+  },
+  {
+    category: "life",
+    chinese: "为什么长辈总爱囤塑料袋？背后藏着哪些生活智慧？",
+    english: "Why do older generations love hoarding plastic bags? What life wisdom lies behind this habit?"
+  },
+  {
+    category: "life",
+    chinese: "外卖备注里的“小暗号”（比如“多放香菜”“不要葱”），藏着怎样的生活态度？",
+    english: "What kind of life attitude is hidden in takeaway notes with \"secret codes\" like \"extra coriander\" or \"no onions\"?"
+  },
+  {
+    category: "life",
+    chinese: "用“儿童视角”看身边的一件事，会发现哪些被忽略的细节？",
+    english: "What overlooked details might you discover if you viewed daily events from a child's perspective?"
+  },
+  {
+    category: "life",
+    chinese: "晒被子时闻到的“阳光味”，其实是细菌的“尸体味”——科学真相和生活浪漫冲突吗？",
+    english: "The \"sunshine smell\" on dried bedding is actually the smell of dead bacteria — does scientific truth conflict with life's romance?"
+  },
+  {
+    category: "life",
+    chinese: "为什么雨天让人更容易专注？环境声音如何影响我们的情绪？",
+    english: "Why does rainy weather make it easier to concentrate? How do environmental sounds affect our emotions?"
+  },
+  {
+    category: "life",
+    chinese: "手工制作（如烘焙、编织）为何能缓解压力？现代科技时代的“手作治愈力”",
+    english: "Why can handmade crafts (like baking, knitting) relieve stress? The healing power of handcraft in the age of technology."
+  },
+  {
+    category: "life",
+    chinese: "超市货架的摆放逻辑：为何必需品总在最里面？消费心理学的日常体现",
+    english: "Supermarket shelf arrangement logic: Why are essential items always at the back? Daily manifestations of consumer psychology."
+  },
+  {
+    category: "life",
+    chinese: "不同城市的早餐文化：从豆浆油条到肠粉，藏着怎样的地域性格？",
+    english: "Breakfast cultures in different cities: What regional personalities are hidden in soy milk with fried dough sticks and rice rolls?"
+  },
+  {
+    category: "life",
+    chinese: "数字时代的“断舍离”：为什么删除手机里的旧照片如此困难？",
+    english: "Digital minimalism in the digital age: Why is it so difficult to delete old photos from our phones?"
+  },
+
+  // 学习成长类 (study)
+  {
+    category: "study",
+    chinese: "碎片化学习真的有效吗？如何将零散知识系统化？",
+    english: "Is fragmented learning really effective? How to systematize scattered knowledge?"
+  },
+  {
+    category: "study",
+    chinese: "为什么我们容易“一听就懂，一做就错”？知识转化的关键是什么？",
+    english: "Why do we easily \"understand when listening, but make mistakes when doing\"? What is the key to knowledge transformation?"
+  },
+  {
+    category: "study",
+    chinese: "成年人学习新技能（如乐器、语言）更难吗？年龄与学习能力的真相",
+    english: "Is it harder for adults to learn new skills (like musical instruments, languages)? The truth about age and learning ability."
+  },
+  {
+    category: "study",
+    chinese: "“好记性不如烂笔头”在数字化时代依然成立吗？手写的独特价值",
+    english: "Is \"A good memory is not as good as a bad pen\" still valid in the digital age? The unique value of handwriting."
+  },
+  {
+    category: "study",
+    chinese: "为什么我们会“越学越觉得无知”？知识边界与认知谦逊",
+    english: "Why do we \"feel more ignorant the more we learn\"? Knowledge boundaries and cognitive humility."
+  },
+  {
+    category: "study",
+    chinese: "游戏化学习（如背单词APP）真的能提高效率吗？动机设计的重要性",
+    english: "Can gamified learning (like vocabulary apps) really improve efficiency? The importance of motivation design."
+  },
+  {
+    category: "study",
+    chinese: "“假装直到成功”：模仿学习法如何帮助我们掌握新技能？",
+    english: "\"Fake it till you make it\": How can imitative learning help us master new skills?"
+  },
+  {
+    category: "study",
+    chinese: "终身学习时代，我们该如何平衡“广度”与“深度”？",
+    english: "In the era of lifelong learning, how should we balance \"breadth\" and \"depth\"?"
+  },
+  {
+    category: "study",
+    chinese: "为什么“教别人”是最好的学习方式？输出倒逼输入的科学原理",
+    english: "Why is \"teaching others\" the best way to learn? The scientific principle of output forcing input."
+  },
+  {
+    category: "study",
+    chinese: "线上教育与线下教育的本质区别：我们到底在为什么付费？",
+    english: "The essential difference between online and offline education: What exactly are we paying for?"
+  },
+
+  // 职场工作类 (work)
+  {
+    category: "work",
+    chinese: "职场中，“会说”和“会做”哪个更重要？",
+    english: "In the workplace, which is more important: being good at speaking or being good at doing?"
+  },
+  {
+    category: "work",
+    chinese: "远程工作的真相：效率提升还是沟通成本增加？",
+    english: "The truth about remote work: Increased efficiency or increased communication costs?"
+  },
+  {
+    category: "work",
+    chinese: "“996”工作制：短期收益与长期健康的博弈",
+    english: "\"996\" work system: The game between short-term gains and long-term health."
+  },
+  {
+    category: "work",
+    chinese: "职场中的“隐形努力”：为什么默默付出有时不被看见？",
+    english: "\"Invisible efforts\" in the workplace: Why are silent efforts sometimes not seen?"
+  },
+  {
+    category: "work",
+    chinese: "职业倦怠的信号：如何在热情耗尽前及时调整？",
+    english: "Signals of job burnout: How to adjust in time before passion is exhausted?"
+  },
+  {
+    category: "work",
+    chinese: "职场“软技能”（如共情力、沟通力）比专业能力更重要吗？",
+    english: "Are workplace \"soft skills\" (like empathy, communication) more important than professional ability?"
+  },
+  {
+    category: "work",
+    chinese: "为什么“准时下班”会被视为“不敬业”？工作时长与价值的误区",
+    english: "Why is \"leaving work on time\" considered \"unprofessional\"? Misunderstandings about working hours and value."
+  },
+  {
+    category: "work",
+    chinese: "职场反馈文化：如何接受批评而不感到被攻击？",
+    english: "Workplace feedback culture: How to accept criticism without feeling attacked?"
+  },
+  {
+    category: "work",
+    chinese: "副业时代：如何平衡主业与副业的关系？",
+    english: "Side hustle era: How to balance the relationship between main job and side job?"
+  },
+  {
+    category: "work",
+    chinese: "“35岁职场危机”是真命题还是焦虑营销？",
+    english: "Is the \"35-year-old workplace crisis\" a real proposition or anxiety marketing?"
+  },
+
+  // 人际关系类 (relationship)
+  {
+    category: "relationship",
+    chinese: "为什么朋友圈点赞成为现代社交的“最低礼仪”？",
+    english: "Why has liking on Moments become the \"minimum etiquette\" of modern socializing?"
+  },
+  {
+    category: "relationship",
+    chinese: "家庭聚餐时每个人都看手机：亲密关系的新型隔阂",
+    english: "Everyone looking at their phones during family dinners: A new type of estrangement in intimate relationships."
+  },
+  {
+    category: "relationship",
+    chinese: "“我都是为你好”：善意的控制欲如何影响亲密关系？",
+    english: "\"I'm doing this for your own good\": How does well-meaning controlling desire affect intimate relationships?"
+  },
+  {
+    category: "relationship",
+    chinese: "成年人的友谊：为什么越长大朋友越少？",
+    english: "Adult friendship: Why do we have fewer friends as we grow older?"
+  },
+  {
+    category: "relationship",
+    chinese: "职场中的“无效社交”：我们真的需要那么多同事微信吗？",
+    english: "\"Invalid socializing\" in the workplace: Do we really need so many colleagues' WeChat contacts?"
+  },
+  {
+    category: "relationship",
+    chinese: "道歉的艺术：为什么“对不起”有时反而让事情更糟？",
+    english: "The art of apology: Why does \"I'm sorry\" sometimes make things worse?"
+  },
+  {
+    category: "relationship",
+    chinese: "异地恋的考验：距离如何筛选出真正的感情？",
+    english: "The test of long-distance relationships: How does distance filter out true feelings?"
+  },
+  {
+    category: "relationship",
+    chinese: "数字时代的“在场感”：视频通话能替代面对面交流吗？",
+    english: "\"Presence\" in the digital age: Can video calls replace face-to-face communication?"
+  },
+  {
+    category: "relationship",
+    chinese: "婆媳关系的本质：两个陌生人如何因爱同一个人而相处？",
+    english: "The essence of mother-in-law and daughter-in-law relationship: How can two strangers get along because they love the same person?"
+  },
+  {
+    category: "relationship",
+    chinese: "“边界感”：为什么保持适当距离能让关系更长久？",
+    english: "\"Sense of boundary\": Why can maintaining an appropriate distance make relationships last longer?"
+  },
+
+  // 自我探索类 (self)
+  {
+    category: "self",
+    chinese: "独处的能力：为什么现代人越来越难忍受“一个人”？",
+    english: "The ability to be alone: Why is it increasingly difficult for modern people to tolerate \"being alone\"?"
+  },
+  {
+    category: "self",
+    chinese: "我们为什么会拖延？拖延背后的心理需求是什么？",
+    english: "Why do we procrastinate? What are the psychological needs behind procrastination?"
+  },
+  {
+    category: "self",
+    chinese: "“与自己和解”：接纳不完美的自己是懦弱还是勇气？",
+    english: "\"Reconcile with yourself\": Is accepting your imperfection cowardice or courage?"
+  },
+  {
+    category: "self",
+    chinese: "我们的消费习惯暴露了怎样的自我认知？",
+    english: "What kind of self-perception do our consumption habits reveal?"
+  },
+  {
+    category: "self",
+    chinese: "愤怒情绪的积极意义：为什么适度愤怒能帮助我们设立边界？",
+    english: "The positive meaning of anger: Why can moderate anger help us set boundaries?"
+  },
+  {
+    category: "self",
+    chinese: "“中年叛逆”：为什么有些人到了中年突然改变生活轨迹？",
+    english: "\"Midlife rebellion\": Why do some people suddenly change their life trajectory in middle age?"
+  },
+  {
+    category: "self",
+    chinese: "社交媒体中的“人设”与真实自我：我们在表演给谁看？",
+    english: "\"Persona\" and real self in social media: Who are we performing for?"
+  },
+  {
+    category: "self",
+    chinese: "为什么我们会反复做同样的梦？梦境与潜意识的连接",
+    english: "Why do we have the same dreams repeatedly? The connection between dreams and the subconscious."
+  },
+  {
+    category: "self",
+    chinese: "“舒适区”与“成长区”：何时该停留，何时该突破？",
+    english: "\"Comfort zone\" and \"growth zone\": When to stay and when to break through?"
+  },
+  {
+    category: "self",
+    chinese: "年龄焦虑：社会时钟如何影响我们的人生选择？",
+    english: "Age anxiety: How does the social clock affect our life choices?"
+  },
+
+  // 认知哲思类 (philosophy)
+  {
+    category: "philosophy",
+    chinese: "“时间感”：为什么快乐时时间过得快，痛苦时过得慢？",
+    english: "\"Sense of time\": Why does time fly when we're happy and drag when we're in pain?"
+  },
+  {
+    category: "philosophy",
+    chinese: "科技让我们更自由还是更束缚？便利背后的隐性代价",
+    english: "Does technology make us more free or more constrained? The hidden cost behind convenience."
+  },
+  {
+    category: "philosophy",
+    chinese: "“幸福”是一种状态还是一个过程？追求幸福的悖论",
+    english: "Is \"happiness\" a state or a process? The paradox of pursuing happiness."
+  },
+  {
+    category: "philosophy",
+    chinese: "我们看到的世界是真实的吗？认知局限如何塑造现实？",
+    english: "Is the world we see real? How do cognitive limitations shape reality?"
+  },
+  {
+    category: "philosophy",
+    chinese: "“完美”的陷阱：为什么追求极致有时会导致停滞？",
+    english: "The trap of \"perfection\": Why does pursuing perfection sometimes lead to stagnation?"
+  },
+  {
+    category: "philosophy",
+    chinese: "“因果论”与“偶然论”：人生是被决定的还是随机的？",
+    english: "\"Causality\" and \"chance theory\": Is life determined or random?"
+  },
+  {
+    category: "philosophy",
+    chinese: "数字记忆与人类遗忘：永久保存一切是好事吗？",
+    english: "Digital memory and human forgetting: Is it good to keep everything permanently?"
+  },
+  {
+    category: "philosophy",
+    chinese: "“有用”与“无用”的辩证：看似无用的事物有何价值？",
+    english: "The dialectic of \"useful\" and \"useless\": What is the value of seemingly useless things?"
+  },
+  {
+    category: "philosophy",
+    chinese: "“自我”是真实存在的，还是社会建构的幻象？",
+    english: "Is the \"self\" real or a socially constructed illusion?"
+  },
+  {
+    category: "philosophy",
+    chinese: "快节奏时代的“慢”哲学：为什么减速能让我们看得更清楚？",
+    english: "The philosophy of \"slowness\" in a fast-paced era: Why can slowing down help us see more clearly?"
+  }
+];
+
+    // 全局变量
+    let recognition;
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+    let timerInterval;
+    let remainingTime = 300; // 5分钟，单位：秒
+    let currentCategory = "all";
+    let favorites = JSON.parse(localStorage.getItem('speechTopicsFavorites')) || [];
+
+    // DOM 元素
+    const startBtn = document.getElementById('start-recording');
+    const stopBtn = document.getElementById('stop-recording');
+    const downloadBtn = document.getElementById('download-recording');
+    const timerDisplay = document.getElementById('timer-display');
+    const transcriptionContainer = document.getElementById('transcription-container');
+    const transcription = document.getElementById('transcription');
+    const transcriptionError = document.getElementById('transcription-error');
+    const recordingStatus = document.getElementById('recording-status');
+    const randomBtn = document.getElementById('random-btn');
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const favoritesBtn = document.getElementById('favorites-btn');
+    const favoritesBtnMobile = document.getElementById('favorites-btn-mobile');
+    const favoritesModal = document.getElementById('favorites-modal');
+    const closeFavorites = document.getElementById('close-favorites');
+    const favoritesList = document.getElementById('favorites-list');
+    const emptyFavorites = document.getElementById('empty-favorites');
+    const clearFavorites = document.getElementById('clear-favorites');
+    const favoritesCount = document.getElementById('favorites-count');
+    const themeToggle = document.getElementById('theme-toggle');
+    const toast = document.getElementById('toast');
+
+    // 初始化语音识别
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        transcriptionError.textContent = "您的浏览器不支持语音转录功能，请使用Chrome浏览器尝试";
+        transcriptionError.classList.remove('hidden');
+        return null;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true; // 关键：持续识别
+      recognition.interimResults = true; // 返回中间结果
+      recognition.maxAlternatives = 1;
+      recognition.lang = 'en-US';
+
+      // 处理识别结果
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+          
+        transcription.textContent = transcript;
+      };
+
+      // 错误处理
+      recognition.onerror = (event) => {
+        console.error('转录错误:', event.error);
+        switch(event.error) {
+          case 'not-allowed':
+            transcriptionError.textContent = "需要麦克风权限才能使用转录功能，请在浏览器设置中开启";
+            break;
+          case 'audio-capture':
+            transcriptionError.textContent = "无法访问麦克风，请确保设备已连接并授予权限";
+            break;
+          case 'network':
+            transcriptionError.textContent = "网络错误，转录服务暂时不可用";
+            break;
+          default:
+            transcriptionError.textContent = "转录出错，请重试";
+        }
+        transcriptionError.classList.remove('hidden');
+      };
+
+      // 识别结束时自动重启（如果仍在录音）
+      recognition.onend = () => {
+        if (isRecording) {
+          recognition.start();
+        }
+      };
+
+      return recognition;
+    }
+
+    // 格式化时间（秒 -> MM:SS）
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // 开始录音
+    async function startRecording() {
+      try {
+        // 重置状态
+        audioChunks = [];
+        transcription.textContent = "正在转录...";
+        transcriptionError.classList.add('hidden');
+        
+        // 获取媒体流
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        // 开始录音
+        mediaRecorder.start();
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+        
+        // 启动语音识别
+        if (!recognition) {
+          recognition = initSpeechRecognition();
+        }
+        if (recognition) {
+          recognition.start();
+        }
+        
+        // 更新UI
+        isRecording = true;
+        startBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        recordingStatus.classList.remove('hidden');
+        transcriptionContainer.classList.remove('hidden');
+        
+        // 启动计时器
+        startTimer();
+      } catch (error) {
+        console.error('录音启动失败:', error);
+        showToast('录音启动失败，请检查麦克风权限');
+        transcriptionError.textContent = "录音启动失败，请检查麦克风权限";
+        transcriptionError.classList.remove('hidden');
+        transcriptionContainer.classList.remove('hidden');
+      }
+    }
+
+    // 停止录音
+    function stopRecording() {
+      if (!isRecording) return;
+      
+      // 停止录音
+      mediaRecorder.stop();
+      isRecording = false;
+      
+      // 停止语音识别
+      if (recognition) {
+        recognition.stop();
+      }
+      
+      // 停止计时器
+      clearInterval(timerInterval);
+      
+      // 更新UI
+      startBtn.classList.remove('hidden');
+      stopBtn.classList.add('hidden');
+      downloadBtn.classList.remove('hidden');
+      recordingStatus.classList.add('hidden');
+      
+      // 录音完成后准备下载
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        downloadBtn.onclick = () => {
+          downloadRecording(audioUrl);
+        };
+      };
+    }
+
+    // 下载录音和转录文本
+    function downloadRecording(audioUrl) {
+      // 下载音频
+      const audioLink = document.createElement('a');
+      audioLink.href = audioUrl;
+      audioLink.download = `演讲录音_${new Date().toISOString().slice(0,10)}.wav`;
+      document.body.appendChild(audioLink);
+      audioLink.click();
+      document.body.removeChild(audioLink);
+      
+      // 下载转录文本
+      if (transcription.textContent.trim() && transcription.textContent !== "正在转录...") {
+        const textBlob = new Blob([transcription.textContent], { type: 'text/plain' });
+        const textUrl = URL.createObjectURL(textBlob);
+        const textLink = document.createElement('a');
+        textLink.href = textUrl;
+        textLink.download = `演讲转录文本_${new Date().toISOString().slice(0,10)}.txt`;
+        document.body.appendChild(textLink);
+        textLink.click();
+        document.body.removeChild(textLink);
+      }
+      
+      showToast('录音和文本已下载');
+    }
+
+    // 启动计时器
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = formatTime(remainingTime);
+      
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        timerDisplay.textContent = formatTime(remainingTime);
+        
+        // 时间到自动停止
+        if (remainingTime <= 0) {
+          stopRecording();
+          showToast('计时结束');
+          remainingTime = 300; // 重置为5分钟
+          timerDisplay.textContent = formatTime(remainingTime);
+        }
+      }, 1000);
+    }
+
+    // 生成随机话题
+    function generateRandomTopic() {
+      let filteredTopics = topics;
+      if (currentCategory !== "all") {
+        filteredTopics = topics.filter(topic => topic.category === currentCategory);
+      }
+      
+      const randomIndex = Math.floor(Math.random() * filteredTopics.length);
+      const randomTopic = filteredTopics[randomIndex];
+      
+      // 更新UI
+      document.getElementById('topic-category').textContent = getCategoryName(randomTopic.category);
+      document.getElementById('chinese-topic').textContent = randomTopic.chinese;
+      document.getElementById('english-topic').textContent = randomTopic.english;
+      
+      // 添加动画效果
+      const topicCard = document.getElementById('topic-card');
+      topicCard.classList.remove('fade-in');
+      void topicCard.offsetWidth; // 触发重绘
+      topicCard.classList.add('fade-in');
+      
+      // 重置收藏按钮状态
+      favoriteBtn.innerHTML = '<i class="fa fa-heart-o"></i><span>收藏 / Save</span>';
+      
+      showToast('话题已更新 / Topic updated');
+    }
+
+    // 获取分类显示名称
+    function getCategoryName(category) {
+      const names = {
+        'all': '全部 / All',
+        'life': '生活趣味 / Life Fun',
+        'study': '学习成长 / Study & Growth',
+        'work': '职场工作 / Career',
+        'relationship': '人际关系 / Relationships',
+        'self': '自我探索 / Self-Exploration',
+        'philosophy': '认知哲思 / Philosophy'
+      };
+      return names[category] || category;
+    }
+
+    // 显示提示信息
+    function showToast(message) {
+      const toastText = toast.querySelector('span');
+      toastText.textContent = message;
+      toast.style.opacity = '1';
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 2000);
+    }
+
+    // 切换分类
+    function switchCategory(category) {
+      currentCategory = category;
+      
+      // 更新按钮样式
+      categoryBtns.forEach(btn => {
+        if (btn.dataset.category === category) {
+          btn.classList.remove('bg-white', 'text-gray-700');
+          btn.classList.add('bg-primary', 'text-white');
+        } else {
+          btn.classList.remove('bg-primary', 'text-white');
+          btn.classList.add('bg-white', 'text-gray-700');
+        }
+      });
+      
+      generateRandomTopic();
+    }
+
+    // 收藏话题
+    function toggleFavorite() {
+      const chineseTopic = document.getElementById('chinese-topic').textContent;
+      const englishTopic = document.getElementById('english-topic').textContent;
+      const category = currentCategory;
+      
+      // 检查是否已收藏
+      const existingIndex = favorites.findIndex(fav => fav.chinese === chineseTopic);
+      
+      if (existingIndex >= 0) {
+        // 取消收藏
+        favorites.splice(existingIndex, 1);
+        favoriteBtn.innerHTML = '<i class="fa fa-heart-o"></i><span>收藏 / Save</span>';
+        showToast('已取消收藏 / Removed from favorites');
+      } else {
+        // 添加收藏
+        favorites.push({ category, chinese: chineseTopic, english: englishTopic });
+        favoriteBtn.innerHTML = '<i class="fa fa-heart text-red-500"></i><span>已收藏 / Saved</span>';
+        showToast('已添加到收藏 / Added to favorites');
+      }
+      
+      // 保存到本地存储
+      localStorage.setItem('speechTopicsFavorites', JSON.stringify(favorites));
+      updateFavoritesCount();
+      renderFavoritesList();
+    }
+
+    // 更新收藏数量
+    function updateFavoritesCount() {
+      favoritesCount.textContent = favorites.length;
+    }
+
+    // 渲染收藏列表
+    function renderFavoritesList() {
+      if (favorites.length === 0) {
+        emptyFavorites.classList.remove('hidden');
+        favoritesList.innerHTML = '';
+        return;
+      }
+      
+      emptyFavorites.classList.add('hidden');
+      favoritesList.innerHTML = '';
+      
+      favorites.forEach((topic, index) => {
+        const topicElement = document.createElement('div');
+        topicElement.className = 'bg-gray-50 rounded-xl p-4 mb-4 hover:shadow-md transition-shadow dark:bg-border-color/50';
+        topicElement.innerHTML = `
+          <div class="inline-block px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-full mb-2">
+            ${getCategoryName(topic.category)}
+          </div>
+          <p class="font-medium mb-2">${topic.chinese}</p>
+          <p class="text-gray-600 text-sm mb-3 dark:text-gray-text">${topic.english}</p>
+          <button class="delete-favorite text-gray-400 hover:text-danger transition-colors" data-index="${index}">
+            <i class="fa fa-trash-o"></i> 删除
+          </button>
+        `;
+        favoritesList.appendChild(topicElement);
+      });
+      
+      // 添加删除事件
+      document.querySelectorAll('.delete-favorite').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.dataset.index);
+          favorites.splice(index, 1);
+          localStorage.setItem('speechTopicsFavorites', JSON.stringify(favorites));
+          updateFavoritesCount();
+          renderFavoritesList();
+          showToast('已删除收藏 / Favorite removed');
+        });
+      });
+    }
+
+    // 切换夜间模式
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark-mode');
+      const isDark = document.documentElement.classList.contains('dark-mode');
+      themeToggle.innerHTML = isDark ? 
+        '<i class="fa fa-sun-o text-yellow-400"></i>' : 
+        '<i class="fa fa-moon-o text-gray-600"></i>';
+    }
+
+    // 事件监听
+    startBtn.addEventListener('click', startRecording);
+    stopBtn.addEventListener('click', stopRecording);
+    randomBtn.addEventListener('click', generateRandomTopic);
+    favoriteBtn.addEventListener('click', toggleFavorite);
+    themeToggle.addEventListener('click', toggleDarkMode);
+    
+    // 分类按钮事件
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchCategory(btn.dataset.category);
+      });
+    });
+    
+    // 收藏夹相关事件
+    [favoritesBtn, favoritesBtnMobile].forEach(btn => {
+      btn.addEventListener('click', () => {
+        favoritesModal.style.opacity = '1';
+        favoritesModal.style.pointerEvents = 'auto';
+        renderFavoritesList();
+      });
+    });
+    
+    closeFavorites.addEventListener('click', () => {
+      favoritesModal.style.opacity = '0';
+      favoritesModal.style.pointerEvents = 'none';
+    });
+    
+    clearFavorites.addEventListener('click', () => {
+      if (confirm('确定要清空所有收藏吗？')) {
+        favorites = [];
+        localStorage.setItem('speechTopicsFavorites', JSON.stringify(favorites));
+        updateFavoritesCount();
+        renderFavoritesList();
+        showToast('已清空所有收藏 / All favorites cleared');
+      }
+    });
+
+    // 点击模态框外部关闭
+    favoritesModal.addEventListener('click', (e) => {
+      if (e.target === favoritesModal) {
+        favoritesModal.style.opacity = '0';
+        favoritesModal.style.pointerEvents = 'none';
+      }
+    });
+
+    // 初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      updateFavoritesCount();
+      initSpeechRecognition();
+      timerDisplay.textContent = formatTime(remainingTime);
+    });
+  </script>
+</body>
+</html>
