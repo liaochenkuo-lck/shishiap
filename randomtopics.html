@@ -869,7 +869,51 @@
       favoriteBtn.innerHTML = '<i class="fa fa-heart-o"></i><span>收藏 / Save</span>';
       
       showToast('话题已更新 / Topic updated');
-    }
+
+
+    }// 生成随机话题
+function generateRandomTopic() {
+  let filteredTopics = topics;
+  if (currentCategory !== "all") {
+    filteredTopics = topics.filter(topic => topic.category === currentCategory);
+  }
+  
+  const randomIndex = Math.floor(Math.random() * filteredTopics.length);
+  const randomTopic = filteredTopics[randomIndex];
+  
+  // 更新UI显示新话题
+  document.getElementById('topic-category').textContent = getCategoryName(randomTopic.category);
+  document.getElementById('chinese-topic').textContent = randomTopic.chinese;
+  document.getElementById('english-topic').textContent = randomTopic.english;
+  
+  // 添加动画效果
+  const topicCard = document.getElementById('topic-card');
+  topicCard.classList.remove('fade-in');
+  void topicCard.offsetWidth; // 触发重绘
+  topicCard.classList.add('fade-in');
+  
+  // 重置收藏按钮状态
+  favoriteBtn.innerHTML = '<i class="fa fa-heart-o"></i><span>收藏 / Save</span>';
+
+  // ------------ 新增：重置录音计时器 ------------
+  // 1. 清除正在运行的计时器
+  clearInterval(timerInterval);
+  // 2. 重置剩余时间为5分钟（300秒）
+  remainingTime = 300;
+  // 3. 更新计时器显示为05:00
+  timerDisplay.textContent = formatTime(remainingTime);
+  // 4. 恢复录音按钮状态（显示开始录音，隐藏停止和下载）
+  startBtn.classList.remove('hidden');
+  stopBtn.classList.add('hidden');
+  downloadBtn.classList.add('hidden');
+  recordingStatus.classList.add('hidden');
+  transcriptionContainer.classList.add('hidden');
+  // 5. 重置录音状态
+  isRecording = false;
+  // ----------------------------------------------
+  
+  showToast('话题已更新 / Topic updated');
+}
 
     // 获取分类显示名称
     function getCategoryName(category) {
