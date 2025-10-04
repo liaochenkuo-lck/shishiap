@@ -224,6 +224,11 @@
                 <i class="fa fa-download"></i>
                 <span>下载录音和文本</span>
               </button>
+<button id="re-record" class="hidden flex items-center gap-2 bg-danger text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+  <i class="fa fa-redo"></i>
+  <span>重新录制</span>
+</button>
+
             </div>
             
             <div id="recording-status" class="mt-3 text-sm text-gray-500 hidden">
@@ -662,6 +667,7 @@
     const favoritesCount = document.getElementById('favorites-count');
     const themeToggle = document.getElementById('theme-toggle');
     const toast = document.getElementById('toast');
+const reRecordBtn = document.getElementById('re-record');
 
     // 初始化语音识别
     function initSpeechRecognition() {
@@ -769,36 +775,73 @@
     }
 
     // 停止录音
-    function stopRecording() {
-      if (!isRecording) return;
-      
-      // 停止录音
-      mediaRecorder.stop();
-      isRecording = false;
-      
-      // 停止语音识别
-      if (recognition) {
-        recognition.stop();
-      }
-      
-      // 停止计时器
-      clearInterval(timerInterval);
-      
-      // 更新UI
-      startBtn.classList.remove('hidden');
-      stopBtn.classList.add('hidden');
-      downloadBtn.classList.remove('hidden');
-      recordingStatus.classList.add('hidden');
-      
-      // 录音完成后准备下载
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        downloadBtn.onclick = () => {
-          downloadRecording(audioUrl);
-        };
-      };
-    }
+    // 停止录音
+function stopRecording() {
+  if (!isRecording) return;
+
+  // 停止录音
+  mediaRecorder.stop();
+  isRecording = false;
+
+  // 停止语音识别
+  if (recognition) {
+    recognition.stop();
+  }
+
+  // 停止计时器
+  clearInterval(timerInterval);
+
+  // 更新 UI
+  startBtn.classList.remove('hidden');
+  stopBtn.classList.add('hidden');
+  downloadBtn.classList.remove('hidden'); // 显示下载按钮
+  reRecordBtn.classList.remove('hidden'); // 显示重新录制按钮
+  recordingStatus.classList.add('hidden');
+
+  // 录音完成后准备下载
+  mediaRecorder.onstop = () => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    downloadBtn.onclick = () => {
+      downloadRecording(audioUrl);
+    };
+  };
+}
+
+
+// 重新录制（覆盖之前的录音）
+function reRecord() {
+  // 1. 停止当前媒体流（释放麦克风）
+  if (mediaRecorder && mediaRecorder.stream) {
+    mediaRecorder.stream.getTracks().forEach(track => track.stop()); // 关键：停止所有音轨
+    mediaRecorder = null;
+  }
+
+  // 2. 重置语音识别状态
+  if (recognition) {
+    recognition.abort(); // 立即终止识别并清除缓冲区
+    recognition = null;
+  }
+
+  // 3. 清空录音数据
+  audioChunks = []; // 清除已录制的音频块
+  transcription.textContent = "准备就绪，点击开始录音后将自动转录..."; // 重置转录文本
+
+  // 4. 重置 UI 状态
+  startBtn.classList.remove('hidden');
+  stopBtn.classList.add('hidden');
+  downloadBtn.classList.add('hidden');
+  reRecordBtn.classList.add('hidden');
+  recordingStatus.classList.add('hidden');
+  transcriptionContainer.classList.add('hidden');
+
+  // 5. 重置计时器
+  remainingTime = 300; // 恢复为 5 分钟
+  timerDisplay.textContent = formatTime(remainingTime);
+
+  // 6. 重置录音状态标记
+  isRecording = false;
+}
 
     // 下载录音和转录文本
     function downloadRecording(audioUrl) {
@@ -1045,6 +1088,7 @@ function generateRandomTopic() {
     randomBtn.addEventListener('click', generateRandomTopic);
     favoriteBtn.addEventListener('click', toggleFavorite);
     themeToggle.addEventListener('click', toggleDarkMode);
+reRecordBtn.addEventListener('click', reRecord);
     
     // 分类按钮事件
     categoryBtns.forEach(btn => {
