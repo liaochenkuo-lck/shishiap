@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Interpretation Questions Randomizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#7c3aed',
+                        accent: '#f59e0b',
+                        success: '#10b981',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            .question-card {
+                background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg font-sans">
+    <!-- Header -->
+    <header class="text-center py-8 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+                <i class="fa fa-bar-chart mr-4"></i>Statistics Interpretation Questions
+            </h1>
+            <p class="text-xl text-blue-100 mb-8">
+                Practice your statistics interpretation skills with random questions
+            </p>
+            <div class="text-sm text-blue-200">
+                <i class="fa fa-info-circle mr-2"></i>
+                Select timer settings and click "Random Question" to start
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 pb-16">
+        <!-- Control Panel -->
+        <div class="bg-white/10 glass-effect rounded-3xl p-6 mb-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Timer Settings -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                        <i class="fa fa-clock-o mr-3 text-accent"></i>Timer Settings
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="setTimer(30)" class="timer-btn bg-accent hover:bg-yellow-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            30s
+                        </button>
+                        <button onclick="setTimer(60)" class="timer-btn bg-primary hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            1min
+                        </button>
+                        <button onclick="setTimer(120)" class="timer-btn bg-secondary hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            2min
+                        </button>
+                        <button onclick="setTimer(0)" class="timer-btn bg-success hover:bg-green-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            <i class="fa fa-eye mr-1"></i>Show
+                        </button>
+                    </div>
+                    <div id="timerDisplay" class="text-center text-white text-2xl font-bold mt-4 hidden">
+                        <span id="timeLeft">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                        <i class="fa fa-cogs mr-3 text-accent"></i>Actions
+                    </h3>
+                    <div class="space-y-3">
+                        <button onclick="showRandomQuestion()" class="w-full bg-gradient-to-r from-primary to-secondary hover:from-blue-600 hover:to-purple-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fa fa-random mr-3"></i>Random Question
+                        </button>
+                        <button onclick="resetQuestions()" class="w-full bg-danger hover:bg-red-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            <i class="fa fa-bullseye mr-3"></i>Reset All
+                        </button>
+                        <button onclick="showHistory()" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
+                            <i class="fa fa-history mr-3"></i>Show History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Display Area -->
+        <div id="questionArea" class="question-card rounded-3xl p-8 mb-8 hidden">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                    <i class="fa fa-question text-2xl text-primary"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Interpretation Question</h2>
+                <p class="text-gray-600" id="questionNumber"></p>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-6">
+                <h3 class="text-xl md:text-2xl font-semibold text-gray-800 leading-relaxed" id="questionText">
+                    <!-- Question text will be displayed here -->
+                </h3>
+            </div>
+
+            <div id="answerSection" class="hidden">
+                <div class="bg-green-50 border-l-4 border-green-500 rounded-r-xl p-6">
+                    <h4 class="text-lg font-semibold text-green-800 mb-2">
+                        <i class="fa fa-lightbulb-o mr-2"></i>Answer Hint
+                    </h4>
+                    <p class="text-green-700" id="answerText">
+                        <!-- Answer text will be displayed here -->
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="showAnswer()" id="showAnswerBtn" class="bg-success hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
+                    <i class="fa fa-check mr-2"></i>Show Answer
+                </button>
+            </div>
+        </div>
+
+        <!-- History Modal -->
+        <div id="historyModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-3xl p-8 max-w-4xl max-h-[80vh] overflow-y-auto mx-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800">
+                        <i class="fa fa-history mr-3 text-primary"></i>Question History
+                    </h3>
+                    <button onclick="hideHistory()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div id="historyList" class="space-y-4">
+                    <!-- History items will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="bg-white/10 glass-effect rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold text-accent mb-2" id="totalQuestions">0</div>
+                <div class="text-blue-100">Total Questions</div>
+            </div>
+            <div class="bg-white/10 glass-effect rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold text-success mb-2" id="answeredQuestions">0</div>
+                <div class="text-blue-100">Answered</div>
+            </div>
+            <div class="bg-white/10 glass-effect rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold text-primary mb-2" id="uniqueQuestions">0</div>
+                <div class="text-blue-100">Unique Questions</div>
+            </div>
+            <div class="bg-white/10 glass-effect rounded-2xl p-6 text-center">
+                <div class="text-3xl font-bold text-secondary mb-2" id="completionRate">0%</div>
+                <div class="text-blue-100">Completion Rate</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-blue-200">
+        <p>&copy; 2024 Statistics Practice Tool | Designed for learning and practice</p>
+    </footer>
+
+    <script>
+        // Statistics interpretation questions
+        const questions = [
+            {
+                id: 1,
+                question: "How to interpret slope?",
+                answer: "The slope represents the change in the dependent variable (y) for each one-unit change in the independent variable (x). A positive slope indicates a positive relationship, while a negative slope indicates a negative relationship."
+            },
+            {
+                id: 2,
+                question: "How to interpret intercept?",
+                answer: "The intercept is the value of the dependent variable (y) when the independent variable (x) is 0. It represents the starting point of the regression line on the y-axis."
+            },
+            {
+                id: 3,
+                question: "How to interpret residual and over/underestimation?",
+                answer: "A residual is the difference between the observed value and the predicted value (residual = observed - predicted). A positive residual means the model underestimated the value, while a negative residual means the model overestimated the value."
+            },
+            {
+                id: 4,
+                question: "How to interpret the coefficient of determination(r-square)?",
+                answer: "R-squared measures the proportion of variance in the dependent variable that is predictable from the independent variable(s). It ranges from 0 to 1, where 1 indicates perfect prediction."
+            },
+            {
+                id: 5,
+                question: "How to interpret correlation(r)?",
+                answer: "Correlation (r) measures the strength and direction of the linear relationship between two variables. It ranges from -1 to 1. Values close to 1 indicate a strong positive relationship, values close to -1 indicate a strong negative relationship, and values near 0 indicate little or no linear relationship."
+            },
+            {
+                id: 6,
+                question: "How to describe FUDS?",
+                answer: "FUDS stands for Form, Unusual features, Direction, and Strength. It is a framework used to describe scatterplots: Form (linear/non-linear), Unusual features (outliers/clusters), Direction (positive/negative), and Strength (strong/weak)."
+            },
+            {
+                id: 7,
+                question: "Why correlation does not imply causation, how to arrive at causation?",
+                answer: "Correlation shows a relationship between variables but does not prove causation. Causation can only be established through controlled experiments with random assignment, where other variables are controlled."
+            },
+            {
+                id: 8,
+                question: "Explain why extrapolation is problematic?",
+                answer: "Extrapolation is predicting beyond the range of the data. It is problematic because the relationship observed within the data range may not continue outside of it, leading to unreliable predictions."
+            },
+            {
+                id: 9,
+                question: "What is Good Residual Plot?",
+                answer: "A good residual plot shows no pattern (random scatter) around the horizontal axis. This indicates that the regression model is appropriate and that the assumptions of linearity, constant variance, and independence are met."
+            },
+            {
+                id: 10,
+                question: "What is SRS?",
+                answer: "SRS stands for Simple Random Sample. It is a sample where every possible sample of size n has an equal chance of being selected from the population."
+            },
+            {
+                id: 11,
+                question: "What is cluster sample?",
+                answer: "A cluster sample divides the population into groups (clusters), randomly selects some clusters, and includes all individuals within the selected clusters in the sample."
+            },
+            {
+                id: 12,
+                question: "What is stratified sample?",
+                answer: "A stratified sample divides the population into subgroups (strata) based on some characteristic, then randomly samples from each stratum proportionally to the stratum's size in the population."
+            },
+            {
+                id: 13,
+                question: "What is systematic sample?",
+                answer: "A systematic sample selects every kth individual from a list of the population. The first individual is randomly selected from the first k individuals."
+            },
+            {
+                id: 14,
+                question: "What are the four principles of experiment design?",
+                answer: "The four principles are: Randomization (random assignment to treatments), Control (comparison to a control group), Replication (multiple subjects in each group), and Blocking (grouping similar subjects)."
+            },
+            {
+                id: 15,
+                question: "What is the benefit of random?",
+                answer: "Randomization helps to eliminate bias and ensures that the treatment groups are comparable at the start of the experiment, making it possible to attribute differences in results to the treatment."
+            },
+            {
+                id: 16,
+                question: "What is the benefit of control?",
+                answer: "Control provides a baseline for comparison. It allows researchers to isolate the effect of the treatment by comparing it to a group that does not receive the treatment."
+            },
+            {
+                id: 17,
+                question: "What is the benefit of compare?",
+                answer: "Comparison allows researchers to determine if the treatment has an effect by comparing the results of the treatment group with the control group."
+            },
+            {
+                id: 18,
+                question: "What is the benefit of replication?",
+                answer: "Replication reduces chance variation and increases the reliability of the results. It allows researchers to estimate the variability in the response and increases the power of the experiment."
+            },
+            {
+                id: 19,
+                question: "What is a completely randomized design?",
+                answer: "In a completely randomized design, all experimental units are randomly assigned to treatment groups, with each unit having an equal chance of being assigned to any group."
+            },
+            {
+                id: 20,
+                question: "What is a randomized block design?",
+                answer: "A randomized block design groups experimental units into blocks of similar characteristics, then randomly assigns treatments within each block to control for variability within blocks."
+            },
+            {
+                id: 21,
+                question: "What is a matched-pair design?",
+                answer: "A matched-pair design is a type of randomized block design where each block consists of two similar experimental units. Each unit in the pair receives a different treatment, or the same unit receives both treatments."
+            },
+            {
+                id: 22,
+                question: "Why is non-random samples not representative?",
+                answer: "Non-random samples can be biased because certain groups in the population may be overrepresented or underrepresented. This makes it difficult to generalize the results to the entire population."
+            },
+            {
+                id: 23,
+                question: "What is confounding variable?",
+                answer: "A confounding variable is a variable that is related to both the independent variable and the dependent variable. It can cause a false association between the variables being studied."
+            },
+            {
+                id: 24,
+                question: "How to interpret mean?",
+                answer: "The mean is the average value of a dataset. It represents the center of mass of the data and is affected by extreme values (outliers)."
+            },
+            {
+                id: 25,
+                question: "How to interpret median?",
+                answer: "The median is the middle value of a sorted dataset. It represents the 50th percentile and is not affected by extreme values, making it a better measure of center for skewed data."
+            },
+            {
+                id: 26,
+                question: "How to interpret Q1,Q3?",
+                answer: "Q1 (First Quartile) is the median of the lower half of the data, representing the 25th percentile. Q3 (Third Quartile) is the median of the upper half of the data, representing the 75th percentile. The interquartile range (IQR = Q3 - Q1) measures spread."
+            },
+            {
+                id: 27,
+                question: "How to interpret 67th percentile?",
+                answer: "The 67th percentile means that 67% of the data values are less than or equal to this value, and 33% of the data values are greater than or equal to this value."
+            },
+            {
+                id: 28,
+                question: "How to interpret -3.4 z score?",
+                answer: "A z-score of -3.4 means the value is 3.4 standard deviations below the mean. This is an extreme value and would be considered an outlier in most datasets."
+            },
+            {
+                id: 29,
+                question: "How to interpret 2.3 z score?",
+                answer: "A z-score of 2.3 means the value is 2.3 standard deviations above the mean. This indicates the value is significantly higher than the average but not extremely unusual."
+            },
+            {
+                id: 30,
+                question: "How to interpret area underneath the normal curve?",
+                answer: "The area under the normal curve represents probabilities. The total area under the curve is 1 (or 100%). The area between two z-scores represents the probability that a value falls between those two z-scores."
+            },
+            {
+                id: 31,
+                question: "How to use probability to find the value in the normal distribution",
+                answer: "To find a value corresponding to a given probability, you can use the inverse normal distribution (z-table or calculator). Find the z-score that corresponds to the cumulative probability, then use the formula: value = mean + (z-score × standard deviation)."
+            },
+            {
+                id: 32,
+                question: "How to find the normal distribution of a linear combination of random variables?",
+                answer: "For linear combinations of independent normal random variables, the resulting distribution is also normal. The mean is the linear combination of the means, and the variance is the linear combination of the variances (with coefficients squared)."
+            },
+            {
+                id: 33,
+                question: "How to decide if the categories are independent in a two-way table?",
+                answer: "To test for independence, compare the observed frequencies with the expected frequencies (calculated as (row total × column total) / grand total). If the observed frequencies are close to the expected frequencies, the variables are independent. A chi-square test can be used to formally test this."
+            }
+        ];
+
+        // Game state
+        let currentTimer = 0;
+        let timerInterval = null;
+        let currentQuestion = null;
+        let usedQuestions = [];
+        let questionHistory = [];
+        let stats = {
+            totalQuestions: 0,
+            answeredQuestions: 0,
+            uniqueQuestions: new Set()
+        };
+
+        // Timer functions
+        function setTimer(seconds) {
+            currentTimer = seconds;
+            
+            // Update button styles
+            document.querySelectorAll('.timer-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-white/50');
+            });
+            event.target.classList.add('ring-4', 'ring-white/50');
+            
+            // Clear existing timer
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Hide timer display if direct show
+            const timerDisplay = document.getElementById('timerDisplay');
+            if (seconds === 0) {
+                timerDisplay.classList.add('hidden');
+            } else {
+                timerDisplay.classList.remove('hidden');
+            }
+        }
+
+        function startTimer() {
+            if (currentTimer === 0 || !currentQuestion) return;
+            
+            let timeLeft = currentTimer;
+            updateTimerDisplay(timeLeft);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    showAnswer();
+                    
+                    // Add visual alert
+                    document.getElementById('answerSection').classList.add('animate-pulse');
+                    setTimeout(() => {
+                        document.getElementById('answerSection').classList.remove('animate-pulse');
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timeLeft').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function clearTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('timerDisplay').classList.add('hidden');
+        }
+
+        // Question functions
+        function showRandomQuestion() {
+            // Clear previous timer
+            clearTimer();
+            
+            // Get available questions (not used yet or all if all used)
+            const availableQuestions = questions.filter(q => !usedQuestions.includes(q.id));
+            const questionToUse = availableQuestions.length > 0 ? 
+                availableQuestions[Math.floor(Math.random() * availableQuestions.length)] :
+                questions[Math.floor(Math.random() * questions.length)];
+            
+            currentQuestion = questionToUse;
+            
+            // Mark as used
+            if (!usedQuestions.includes(questionToUse.id)) {
+                usedQuestions.push(questionToUse.id);
+            }
+            
+            // Update stats
+            stats.totalQuestions++;
+            stats.uniqueQuestions.add(questionToUse.id);
+            updateStats();
+            
+            // Display question
+            document.getElementById('questionNumber').textContent = `Question ${questionToUse.id} of ${questions.length}`;
+            document.getElementById('questionText').textContent = questionToUse.question;
+            document.getElementById('answerText').textContent = questionToUse.answer;
+            
+            // Reset answer section
+            document.getElementById('answerSection').classList.add('hidden');
+            document.getElementById('showAnswerBtn').classList.remove('hidden');
+            document.getElementById('questionArea').classList.remove('hidden');
+            
+            // Add to history
+            const historyItem = {
+                id: questionToUse.id,
+                question: questionToUse.question,
+                timestamp: new Date().toLocaleString(),
+                answered: false
+            };
+            questionHistory.unshift(historyItem);
+            
+            // Start timer if set
+            if (currentTimer > 0) {
+                startTimer();
+            }
+            
+            // Scroll to question area
+            document.getElementById('questionArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showAnswer() {
+            clearTimer();
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('showAnswerBtn').classList.add('hidden');
+            
+            // Update history
+            const historyItem = questionHistory.find(item => item.id === currentQuestion.id && !item.answered);
+            if (historyItem) {
+                historyItem.answered = true;
+                stats.answeredQuestions++;
+                updateStats();
+            }
+        }
+
+        function resetQuestions() {
+            clearTimer();
+            currentQuestion = null;
+            usedQuestions = [];
+            questionHistory = [];
+            stats = {
+                totalQuestions: 0,
+                answeredQuestions: 0,
+                uniqueQuestions: new Set()
+            };
+            
+            document.getElementById('questionArea').classList.add('hidden');
+            document.getElementById('historyModal').classList.add('hidden');
+            updateStats();
+            
+            // Reset timer button selection
+            document.querySelectorAll('.timer-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-white/50');
+            });
+        }
+
+        // History functions
+        function showHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            if (questionHistory.length === 0) {
+                historyList.innerHTML = '<p class="text-gray-500 text-center py-8">No question history yet</p>';
+            } else {
+                questionHistory.forEach((item, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `bg-gray-50 rounded-xl p-4 border-l-4 ${item.answered ? 'border-green-500' : 'border-gray-300'}`;
+                    historyItem.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-semibold text-gray-800">Question ${item.id}</span>
+                            <span class="text-sm text-gray-500">${item.timestamp}</span>
+                        </div>
+                        <p class="text-gray-700 mb-2">${item.question}</p>
+                        ${item.answered ? '<span class="inline-flex items-center text-green-600 text-sm"><i class="fa fa-check-circle mr-1"></i>Answered</span>' : '<span class="inline-flex items-center text-gray-400 text-sm"><i class="fa fa-clock-o mr-1"></i>Not answered</span>'}
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+            }
+            
+            document.getElementById('historyModal').classList.remove('hidden');
+        }
+
+        function hideHistory() {
+            document.getElementById('historyModal').classList.add('hidden');
+        }
+
+        // Stats functions
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = stats.totalQuestions;
+            document.getElementById('answeredQuestions').textContent = stats.answeredQuestions;
+            document.getElementById('uniqueQuestions').textContent = stats.uniqueQuestions.size;
+            
+            const completionRate = stats.totalQuestions > 0 ? 
+                Math.round((stats.answeredQuestions / stats.totalQuestions) * 100) : 0;
+            document.getElementById('completionRate').textContent = `${completionRate}%`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            
+            // Set default timer to 30 seconds
+            setTimer(30);
+            
+            // Close modal when clicking outside
+            document.getElementById('historyModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideHistory();
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    if (currentQuestion && document.getElementById('answerSection').classList.contains('hidden')) {
+                        showAnswer();
+                    } else {
+                        showRandomQuestion();
+                    }
+                }
+                if (e.key === 'Escape') {
+                    hideHistory();
+                }
+            });
+        });
+
+        // Add loading animation
+        function addLoadingAnimation() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fa fa-spinner fa-spin mr-3"></i>Loading...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 500);
+        }
+
+        // Add loading animation to buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', addLoadingAnimation);
+            });
+        });
+    </script>
+</body>
+</html>
